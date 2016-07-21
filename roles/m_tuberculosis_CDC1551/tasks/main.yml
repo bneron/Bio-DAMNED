@@ -1,0 +1,50 @@
+---
+
+- name: create m_tuberculosis_CDC1551 directory
+  become: yes
+  become_user: "{{ bank_user }}"
+  file: path={{ bank_root }}/{{ bank_name }} state=directory owner={{ bank_user }} group={{ bank_group }} mode=0775
+
+- name: create m_tuberculosis_CDC1551 subtree directory
+  become: yes
+  become_user: "{{ bank_user }}"
+  file: path={{ bank_root }}/{{ bank_name }}/{{ item }} state=directory  owner={{ bank_user }} group={{ bank_group }} mode=0775
+  with_items:
+    - uncompressed
+    - fasta
+    - golden
+    - blast2
+
+- name: download m_tuberculosis_CDC1551
+  become: yes
+  become_user: "{{ bank_user }}"
+  # because of bug https://github.com/ansible/ansible-modules-core/issues/3661
+  # on ansible version 2.0.2.0 we cxan not use get_url : workaround use command
+  #  get_url: ftp://ftp.ncbi.nih.gov/genomes/archive/old_genbank/Bacteria/Mycobacterium_tuberculosis_CDC1551_uid223/AE000516.gbk
+  command: >
+    curl ftp://ftp.ncbi.nih.gov/genomes/archive/old_genbank/Bacteria/Mycobacterium_tuberculosis_CDC1551_uid223/AE000516.gbk
+    chdir={{ bank_root }}/{{ bank_name }}/uncompressed
+
+- name: reformating in fasta format
+  become: yes
+  become_user: "{{ bank_user }}"
+  shell: module load dbtools && flat2fasta -d {{ bank_name }} NC_002755.gbk >> ../fasta/{{ bank_name }}.fa
+
+- name: run squizz to check format
+  become: yes
+  become_user: "{{ bank_user }}"
+  shell: module load squizz && squizz {{ bank_name }}.fa chdir={{ bank_root }}/{{ bank_name }}
+  register: format
+
+- name: Check fasta format
+  fail: msg="{{ bank_name }} not correctly formated {{ format.stderr }}"
+  when: format.stderr not FASTA
+
+- name: create links to fasta format
+  become: yes
+  become_user: "{{ bank_user }}"
+  file: >
+    path={{bank_root}}/{{ bank_name }}_uid57775/fasta/{{ bank_name }}.fa
+    dest={{bank_name}}.fa
+    state=link
+    chdir={{ bank_root }}/fasta

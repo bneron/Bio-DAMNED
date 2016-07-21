@@ -1,0 +1,5 @@
+---
+
+bank_user: bneron
+bank_group: users
+bank_root: /tmp/bank
