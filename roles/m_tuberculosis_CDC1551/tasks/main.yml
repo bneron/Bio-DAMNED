@@ -1,11 +1,11 @@
 ---
 
-- name: create m_tuberculosis_CDC1551 directory
+- name: create bank directory
   become: yes
   become_user: "{{ bank_user }}"
   file: path={{ bank_root }}/{{ bank_name }} state=directory owner={{ bank_user }} group={{ bank_group }} mode=0775
 
-- name: create m_tuberculosis_CDC1551 subtree directory
+- name: create bank subtree directories
   become: yes
   become_user: "{{ bank_user }}"
   file: path={{ bank_root }}/{{ bank_name }}/{{ item }} state=directory  owner={{ bank_user }} group={{ bank_group }} mode=0775
@@ -15,7 +15,7 @@
     - golden
     - blast2
 
-- name: download m_tuberculosis_CDC1551
+- name: download {{ bank_name }}
   become: yes
   become_user: "{{ bank_user }}"
   # because of bug https://github.com/ansible/ansible-modules-core/issues/3661
