@@ -5,11 +5,11 @@
 - name: create root directory for indexes
   file: path={{ bank_root}}/index state=directory owner={{ bank_user }} group={{ bank_group }} mode=775
 
-- name: create directory for golden indexes
-  file: path={{ bank_root}}/index/golden state=directory owner={{ bank_user }} group={{ bank_group }} mode=775
-
-- name: create directory for blast2 indexes
-  file: path={{ bank_root}}/index/blast2 state=directory owner={{ bank_user }} group={{ bank_group }} mode=775
+- name: create directory for specifics indexes
+  file: path={{ bank_root}}/index/{{ item }} state=directory owner={{ bank_user }} group={{ bank_group }} mode=775
+  with_items:
+    - golden
+    - blast2
 
 - name: create directory for fasta files
   file: path={{ bank_root}}/fasta state=directory owner={{ bank_user }} group={{ bank_group }} mode=775
