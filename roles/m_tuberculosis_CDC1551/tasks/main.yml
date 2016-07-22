@@ -22,29 +22,106 @@
   # on ansible version 2.0.2.0 we cxan not use get_url : workaround use command
   #  get_url: ftp://ftp.ncbi.nih.gov/genomes/archive/old_genbank/Bacteria/Mycobacterium_tuberculosis_CDC1551_uid223/AE000516.gbk
   command: >
-    curl ftp://ftp.ncbi.nih.gov/genomes/archive/old_genbank/Bacteria/Mycobacterium_tuberculosis_CDC1551_uid223/AE000516.gbk
+    curl ftp://ftp.ncbi.nih.gov/genomes/archive/old_genbank/Bacteria/Mycobacterium_tuberculosis_CDC1551_uid223/AE000516.gbk -o {{bank_name}}.gbk
     chdir={{ bank_root }}/{{ bank_name }}/uncompressed
+    creates={{ bank_root }}/{{ bank_name }}/uncompressed/{{ bank_name }}.gbk
 
 - name: reformating in fasta format
   become: yes
   become_user: "{{ bank_user }}"
-  shell: module load dbtools && flat2fasta -d {{ bank_name }} NC_002755.gbk >> ../fasta/{{ bank_name }}.fa
+  #shell: module load dbtools && flat2fasta -d {{ bank_name }} {{ bank_name }}.gbk >> {{ bank_root }}/{{ bank_name }}/fasta/{{ bank_name }}.fa
+  shell: >
+    squizz -c FASTA -f GENBANK {{ bank_name }}.gbk >> {{ bank_root }}/{{ bank_name }}/fasta/{{ bank_name }}.fa
+    chdir={{ bank_root }}/{{ bank_name }}/uncompressed
 
 - name: run squizz to check format
   become: yes
   become_user: "{{ bank_user }}"
-  shell: module load squizz && squizz {{ bank_name }}.fa chdir={{ bank_root }}/{{ bank_name }}
+  shell: squizz {{ bank_name }}.fa chdir={{ bank_root }}/{{ bank_name }}/fasta
   register: format
 
 - name: Check fasta format
   fail: msg="{{ bank_name }} not correctly formated {{ format.stderr }}"
-  when: format.stderr not FASTA
+  when: not 'FASTA' in format.stderr
 
 - name: create links to fasta format
   become: yes
   become_user: "{{ bank_user }}"
   file: >
-    path={{bank_root}}/{{ bank_name }}_uid57775/fasta/{{ bank_name }}.fa
-    dest={{bank_name}}.fa
+    src={{bank_root}}/{{ bank_name }}/fasta/{{ bank_name }}.fa
+    dest={{bank_root}}/fasta/{{bank_name}}.fa
     state=link
-    chdir={{ bank_root }}/fasta
+
+- name: clean golden indexes
+  become: yes
+  become_user: "{{ bank_user }}"
+  file: path={{bank_root}}/{{bank_name}}/golden/{{ bank_name }}}.{{ item }} state=absent
+  with_items:
+    - acx
+    - dbx
+    - idx
+
+- name: creates golden indexes
+  become: yes
+  become_user: "{{ bank_user }}"
+  shell: >
+    goldin -d {{ bank_name }} {{ bank_name }} {{ bank_root }}/{{ bank_name }}/uncompressed/{{ bank_name }}.gbk
+    chdir={{ bank_root }}/{{ bank_name }}/golden
+
+- name: create links to golden indexes
+  become: yes
+  become_user: "{{ bank_user }}"
+  file: >
+    src={{bank_root}}/{{ bank_name }}/golden/{{ bank_name }}.{{ item }}
+    dest={{bank_root}}/index/golden/{{ bank_name }}.{{ item }}
+    state=link
+  with_items:
+    - acx
+    - dbx
+    - idx
+
+- name: clean blast2 indexes
+  become: yes
+  become_user: "{{ bank_user }}"
+  file: path={{bank_root}}/{{bank_name}}/blast2/{{ bank_name }}}.{{ item }} state=absent
+  with_items:
+    - nhr
+    - nin
+    - nsq
+
+- name: creates blast2 indexes
+  become: yes
+  become_user: "{{ bank_user }}"
+  #formatdb  -t "{{ bank_name }}" -p F -n "{{ bank_name }}" -i {{ bank_root }}/{{ bank_name }}/fasta/{{ bank_name }}.fa -l /dev/null
+  shell: >
+    makeblastdb -title {{ bank_name }} -in {{ bank_root }}/{{ bank_name }}/fasta/{{ bank_name }}.fa -dbtype nucl
+    chdir={{ bank_root }}/{{ bank_name }}/blast2
+
+- name: move and rename blast indexes in right directory
+  become: yes
+  become_user: "{{ bank_user }}"
+  command: mv {{ bank_root }}/{{ bank_name }}/fasta/{{ bank_name }}.fa.{{ item }} {{ bank_root }}/{{ bank_name }}/blast2/{{ bank_name }}.{{ item }}
+  with_items:
+    - nhr
+    - nin
+    - nsq
+
+- name: create links to blast2 indexes
+  become: yes
+  become_user: "{{ bank_user }}"
+  file: >
+    src={{bank_root}}/{{ bank_name }}/blast2/{{ bank_name }}.{{ item }}
+    dest={{bank_root}}/index/blast2/{{ bank_name }}.{{ item }}
+    state=link
+  with_items:
+    - nhr
+    - nin
+    - nsq
+
+- name: create link for fasta
+  become: yes
+  become_user: "{{ bank_user }}"
+  file: >
+    src={{bank_root}}/{{ bank_name }}/fasta/{{ bank_name }}.fa
+    dest={{bank_root}}/fasta/{{ bank_name }}.fa
+    state=link
