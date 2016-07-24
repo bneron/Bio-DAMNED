@@ -22,7 +22,8 @@
   # on ansible version 2.0.2.0 we cxan not use get_url : workaround use command
   #  get_url: ftp://ftp.ncbi.nih.gov/genomes/archive/old_genbank/Bacteria/Mycobacterium_tuberculosis_CDC1551_uid223/AE000516.gbk
   command: >
-    curl ftp://ftp.ncbi.nih.gov/genomes/archive/old_genbank/Bacteria/Mycobacterium_tuberculosis_CDC1551_uid223/AE000516.gbk -o {{bank_name}}.gbk
+    #curl ftp://ftp.ncbi.nih.gov/genomes/archive/old_genbank/Bacteria/Mycobacterium_tuberculosis_CDC1551_uid223/AE000516.gbk -o {{bank_name}}.gbk
+    curl {{ bank_src }}
     chdir={{ bank_root }}/{{ bank_name }}/uncompressed
     creates={{ bank_root }}/{{ bank_name }}/uncompressed/{{ bank_name }}.gbk
 
