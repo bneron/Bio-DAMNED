@@ -1,0 +1,30 @@
+######################
+# Logs and databases #
+######################
+*\.log
+.DS_Store
+
+####################
+# Eclipse metadata #
+####################
+\.project
+\.pydevproject
+\.settings/
+
+#############
+# vim files #
+#############
+*\.swp
+*~
+\#*\#
+
+################# 
+# pycharm files #
+#################
+\.idea
+
+
+#################
+# ansible files #
+# ###############
+*\.retry
