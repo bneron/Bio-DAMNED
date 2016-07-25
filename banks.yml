@@ -5,4 +5,4 @@
 
   roles:
     - {role: setup_bank_tree, tags: ['setup']}
-    - {role: genbank_genome, tags: ['cdc1551'], bank_name: m_tuberculosis_CDC1551, bank_src= ftp://ftp.ncbi.nih.gov/genomes/archive/old_genbank/Bacteria/Mycobacterium_tuberculosis_CDC1551_uid223/AE000516.gbk -o {{bank_name}}.gbk}
+    - {role: genbank_genome, tags: ['cdc1551'], bank_name: m_tuberculosis_CDC1551, bank_src: "ftp://ftp.ncbi.nih.gov/genomes/archive/old_genbank/Bacteria/Mycobacterium_tuberculosis_CDC1551_uid223/AE000516.gbk"}
