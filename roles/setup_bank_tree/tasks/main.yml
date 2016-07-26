@@ -13,3 +13,6 @@
 
 - name: create directory for fasta files
   file: path={{ bank_root}}/fasta state=directory owner={{ bank_user }} group={{ bank_group }} mode=775
+
+- name: create directory for distant data banks
+  file: path={{ bank_root }}/distbanks state=directory owner={{ bank_user }} group={{ bank_group }} mode=775

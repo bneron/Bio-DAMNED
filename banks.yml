@@ -5,4 +5,11 @@
 
   roles:
     - {role: setup_bank_tree, tags: ['setup']}
-    - {role: genbank_genome, tags: ['cdc1551'], bank_name: m_tuberculosis_CDC1551, bank_src: "ftp://ftp.ncbi.nih.gov/genomes/archive/old_genbank/Bacteria/Mycobacterium_tuberculosis_CDC1551_uid223/AE000516.gbk"}
+    - {role: genbank_genome, tags: ['cdc1551'],
+       bank_name: m_tuberculosis_CDC1551,
+       bank_src: "ftp://ftp.ncbi.nih.gov/genomes/archive/old_genbank/Bacteria/Mycobacterium_tuberculosis_CDC1551_uid223/AE000516.gbk",
+       bank_file: "AE000516.gbk"}
+    - {role: fasta_genome, tags: ['yersinia_nuc'],
+       bank_name: yersinia_pestis_nuc,
+       bank_src: "ftp://ftp.ncbi.nih.gov/genomes/refseq/bacteria/Yersinia_pestis/reference/GCF_000009065.1_ASM906v1/GCF_000009065.1_ASM906v1_genomic.fna.gz",
+       bank_file: "GCF_000009065.1_ASM906v1_genomic.fna.gz"}

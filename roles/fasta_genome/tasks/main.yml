@@ -19,13 +19,12 @@
   become: yes
   become_user: "{{ bank_user }}"
   # because of bug https://github.com/ansible/ansible-modules-core/issues/3661
-  # on ansible version 2.0.2.0 we cxan not use get_url : workaround use command
+  # on ansible version 2.0.2.0 we cannot use get_url : workaround use command
   #  get_url: ftp://ftp.ncbi.nih.gov/genomes/archive/old_genbank/Bacteria/Mycobacterium_tuberculosis_CDC1551_uid223/AE000516.gbk
   #curl ftp://ftp.ncbi.nih.gov/genomes/archive/old_genbank/Bacteria/Mycobacterium_tuberculosis_CDC1551_uid223/AE000516.gbk -o {{bank_name}}.gbk
   command: >
     curl {{ bank_src }} -o {{ bank_root }}/distbanks/{{ bank_src|basename }}
     creates={{ bank_root }}/distbanks/{{ bank_src|basename }}
-
 
 - name: gess mime
   become: yes
@@ -50,14 +49,14 @@
     - name: renaming {{ bank_name }}
       become: yes
       become_user: "{{ bank_user }}"
-      shell: mv {{ uncompressed_bank.files[0].path }} {{ bank_root }}/{{ bank_name }}/uncompressed/{{ bank_name }}.gbk
+      shell: mv {{ uncompressed_bank.files[0].path }} {{ bank_root }}/{{ bank_name }}/uncompressed/{{ bank_name }}.fa
 
     rescue:
       - name: uncompressing gzip {{ bank_name }}
         become: yes
         become_user: "{{ bank_user }}"
         shell: >
-          gunzip -c {{ bank_root }}/distbanks/{{ bank_src|basename }} > {{ bank_root }}/{{ bank_name }}/uncompressed/{{ bank_name }}.gbk
+          gunzip -c {{ bank_root }}/distbanks/{{ bank_src|basename }} > {{ bank_root }}/{{ bank_name }}/uncompressed/{{ bank_name }}.fa
 
   when: mime.stat.mime_type in ["application/x-gzip", "application/zip"]
 
@@ -67,19 +66,17 @@
   when: mime.stat.mime_type not in ["application/x-gzip", "application/zip"]
   copy: >
     src={{ bank_root }}/distbanks/{{ bank_src|basename }}
-    dest={{ bank_root }}/{{ bank_name }}/uncompressed/{{ bank_name }}.gbk
+    dest={{ bank_root }}/{{ bank_name }}/uncompressed/{{ bank_name | splitext | last }}.fa
     remote_src=True
     owner={{ bank_user }}
     group={{ bank_group }}
     mode=0644
 
-
 - name: reformating "{{ bank_name }}" in fasta format
   become: yes
   become_user: "{{ bank_user }}"
-  #shell: module load dbtools && flat2fasta -d {{ bank_name }} {{ bank_name }}.gbk >> {{ bank_root }}/{{ bank_name }}/fasta/{{ bank_name }}.fa
   shell: >
-    squizz -c FASTA -f GENBANK {{ bank_name }}.gbk >> {{ bank_root }}/{{ bank_name }}/fasta/{{ bank_name }}.fa
+    squizz -c FASTA -f FASTA {{ bank_name }}.fa >> {{ bank_root }}/{{ bank_name }}/fasta/{{ bank_name }}.fa
     chdir={{ bank_root }}/{{ bank_name }}/uncompressed
 
 - name: running squizz on "{{ bank_name }}"  to check format
@@ -92,41 +89,13 @@
   fail: msg="{{ bank_name }}" not correctly formated "{{ format.stderr }}"
   when: not 'FASTA' in format.stderr
 
-- name: reating links to fasta format
+- name: creating links to fasta format
   become: yes
   become_user: "{{ bank_user }}"
   file: >
     src={{bank_root}}/{{ bank_name }}/fasta/{{ bank_name }}.fa
     dest={{bank_root}}/fasta/{{bank_name}}.fa
     state=link
-
-- name: cleaning "{{ bank_name }}" golden indexes
-  become: yes
-  become_user: "{{ bank_user }}"
-  file: path={{bank_root}}/{{bank_name}}/golden/{{ bank_name }}}.{{ item }} state=absent
-  with_items:
-    - acx
-    - dbx
-    - idx
-
-- name: creating "{{ bank_name }}" new golden indexes
-  become: yes
-  become_user: "{{ bank_user }}"
-  shell: >
-    goldin -d {{ bank_name }} {{ bank_name }} {{ bank_root }}/{{ bank_name }}/uncompressed/{{ bank_name }}.gbk
-    chdir={{ bank_root }}/{{ bank_name }}/golden
-
-- name: creating "{{ bank_name }}" links to golden indexes
-  become: yes
-  become_user: "{{ bank_user }}"
-  file: >
-    src={{bank_root}}/{{ bank_name }}/golden/{{ bank_name }}.{{ item }}
-    dest={{bank_root}}/index/golden/{{ bank_name }}.{{ item }}
-    state=link
-  with_items:
-    - acx
-    - dbx
-    - idx
 
 - name: cleaning "{{ bank_name }}" blast2 indexes
   become: yes
