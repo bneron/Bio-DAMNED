@@ -1,0 +1,8 @@
+---
+- name: Creating link for fasta
+  become: yes
+  become_user: "{{ bank_user }}"
+  file: >
+    src={{bank_root}}/{{ bank_name }}/fasta/{{ bank_name }}.fa
+    dest={{bank_root}}/fasta/{{ bank_name }}.fa
+    state=link

@@ -1,0 +1,39 @@
+---
+
+- name: Creating bank "{{ bank_name }}" golden directories
+  become: yes
+  become_user: "{{ bank_user }}"
+  file: path={{ bank_root }}/{{ bank_name }}/golden
+        state=directory
+        owner={{ bank_user }}
+        group={{ bank_group }}
+        mode=0775
+
+- name: cleaning "{{ bank_name }}" golden indexes
+  become: yes
+  become_user: "{{ bank_user }}"
+  file: path={{bank_root}}/{{bank_name}}/golden/{{ bank_name }}}.{{ item }} state=absent
+  with_items:
+    - acx
+    - dbx
+    - idx
+
+- name: creating "{{ bank_name }}" new golden indexes
+  become: yes
+  become_user: "{{ bank_user }}"
+  shell: >
+    goldin -d {{ bank_name }} {{ bank_name }} {{ bank_root }}/{{ bank_name }}/uncompressed/{{ bank_name }}.gbk
+    chdir={{ bank_root }}/{{ bank_name }}/golden
+
+
+- name: creating "{{ bank_name }}" links to golden indexes
+  become: yes
+  become_user: "{{ bank_user }}"
+  file: >
+    src={{bank_root}}/{{ bank_name }}/golden/{{ bank_name }}.{{ item }}
+    dest={{bank_root}}/index/golden/{{ bank_name }}.{{ item }}
+    state=link
+  with_items:
+    - acx
+    - dbx
+    - idx

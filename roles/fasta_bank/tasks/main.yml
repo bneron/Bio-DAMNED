@@ -1,0 +1,31 @@
+---
+
+- include: ../../common_tasks/setup_general_bank_tree.yml
+
+- include: ../../common_tasks/setup_specific_bank_tree.yml
+
+- include: ../../common_tasks/get_data.yml
+
+
+- name: Reformating "{{ bank_name }}" in fasta format
+  become: yes
+  become_user: "{{ bank_user }}"
+  shell: >
+    squizz -c FASTA -f FASTA {{ bank_name }}.fa >> {{ bank_root }}/{{ bank_name }}/fasta/{{ bank_name }}.fa
+    chdir={{ bank_root }}/{{ bank_name }}/uncompressed
+
+- name: Running squizz on "{{ bank_name }}"  to check format
+  become: yes
+  become_user: "{{ bank_user }}"
+  shell: squizz {{ bank_name }}.fa chdir={{ bank_root }}/{{ bank_name }}/fasta
+  register: format
+
+- name: Checking fasta format
+  fail: msg="{{ bank_name }}" not correctly formated "{{ format.stderr }}"
+  when: not 'FASTA' in format.stderr
+
+
+- include: ../../common_tasks/link_fasta.yml
+
+- include: ../../common_tasks/blast2_indexing.yml
+

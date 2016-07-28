@@ -8,8 +8,17 @@
 - name: create directory for specifics indexes
   file: path={{ bank_root}}/index/{{ item }} state=directory owner={{ bank_user }} group={{ bank_group }} mode=775
   with_items:
-    - golden
     - blast2
+    - blast+
+    - bowtie2
+    - bwa
+    - fusioncatcher
+    - gatk
+    - golden
+    - hmmer
+    - picard
+    - samtools
+    - soap
 
 - name: create directory for fasta files
   file: path={{ bank_root}}/fasta state=directory owner={{ bank_user }} group={{ bank_group }} mode=775

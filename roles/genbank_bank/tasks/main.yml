@@ -1,0 +1,22 @@
+---
+- include: ../../common_tasks/setup_general_bank_tree.yml
+
+- include: ../../common_tasks/setup_specific_bank_tree.yml
+
+- include: ../../common_tasks/get_data.yml
+
+- name: reformating "{{ bank_name }}" in fasta format
+  become: yes
+  become_user: "{{ bank_user }}"
+  #shell: module load dbtools && flat2fasta -d {{ bank_name }} {{ bank_name }}.gbk >> {{ bank_root }}/{{ bank_name }}/fasta/{{ bank_name }}.fa
+  shell: >
+    squizz -c FASTA -f GENBANK {{ bank_name }}.gbk >> {{ bank_root }}/{{ bank_name }}/fasta/{{ bank_name }}.fa
+    chdir={{ bank_root }}/{{ bank_name }}/uncompressed
+
+
+- include: ../../common_tasks/link_fasta.yml
+
+- include: ../../common_tasks/golden_indexing.yml
+
+- include: ../../common_tasks/blast2_indexing.yml
+

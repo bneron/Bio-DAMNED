@@ -1,0 +1,42 @@
+---
+
+- name: Creating bank "{{ bank_name }}" bowtie2 directories
+  become: yes
+  become_user: "{{ bank_user }}"
+  file: path={{ bank_root }}/{{ bank_name }}/bowtie2
+        state=directory
+        owner={{ bank_user }}
+        group={{ bank_group }}
+        mode=0775
+
+- name: Cleaning "{{ bank_name }}" bowtie2 indexes links
+  become: yes
+  become_user: "{{ bank_user }}"
+  file: path={{bank_root}}/index/bowtie2/{{ bank_name | basename }} state=absent
+  with_fileglob:
+    - "{{ bank_root }}/{{ bank_name }}/bowtie2/*"
+
+- name: Cleaning "{{ bank_name }}" old bowtie2 indexes
+  become: yes
+  become_user: "{{ bank_user }}"
+  file: >
+    path={{ item }}
+    state=absent
+  with_fileglob:
+    - "{{ bank_root }}/{{ bank_name }}/bowtie2/*"
+
+- name: Indexing {{ bank_name }} for bowtie2
+  become: yes
+  become_user: "{{ bank_user }}"
+  shell: >
+     bowtie2-build {{ bank_root }}/{{ bank_name }}/fasta/{{ bank_name }}.fa {{ bank_root }}/{{ bank_name }}/bowtie2/{{ bank_name }}
+
+- name: Creating links for {{ bank_name }} bowtie2 indexes
+  become: yes
+  become_user: "{{ bank_user }}"
+  file: >
+    src={{ item }}
+    dest={{ bank_root }}/index/bowtie2/{{ item | basename }}
+    state=link
+  with_fileglob:
+    - "{{ bank_root }}/{{ bank_name }}/bowtie2/*"

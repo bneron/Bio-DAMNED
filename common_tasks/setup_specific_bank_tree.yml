@@ -1,0 +1,13 @@
+---
+- name: Creating bank "{{ bank_name }}" directory
+  become: yes
+  become_user: "{{ bank_user }}"
+  file: path={{ bank_root }}/{{ bank_name }} state=directory owner={{ bank_user }} group={{ bank_group }} mode=0775
+
+- name: Creating bank "{{ bank_name }}" subtree directories
+  become: yes
+  become_user: "{{ bank_user }}"
+  file: path={{ bank_root }}/{{ bank_name }}/{{ item }} state=directory  owner={{ bank_user }} group={{ bank_group }} mode=0775
+  with_items:
+    - uncompressed
+    - fasta
