@@ -10,6 +10,7 @@
   with_items:
     - blast2
     - blast+
+    - bowtie
     - bowtie2
     - bwa
     - fusioncatcher
