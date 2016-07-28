@@ -27,10 +27,7 @@
 - name: Indexing "{{ bank_name }}" for bwa
   become: yes
   become_user: "{{ bank_user }}"
-  shell: >
-     bowtie2-build {{ bank_root }}/{{ bank_name }}/fasta/{{ bank_name }}.fa {{ bank_root }}/{{ bank_name }}/bwa/
- (data.dir)s/%(db.name)s/future_release/uncompressed/hg19.fa %(data.dir)s/%(db.name)s/future_release/bwa bwtsw
-  bwa index -a bwtsw -p {{ bank_root }}/{{ bank_name }}/bwa/ {{ bank_root }}/{{ bank_name }}/fasta/{{ bank_name }}.fa
+  shell: bwa index -a bwtsw -p {{ bank_root }}/{{ bank_name }}/bwa/{{ bank_name }} {{ bank_root }}/{{ bank_name }}/fasta/{{ bank_name }}.fa
 
 - name: Creating links for "{{ bank_name }}" bwa indexes
   become: yes
