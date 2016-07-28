@@ -1,10 +1,10 @@
 ---
 
-- include: ../../common_tasks/setup_general_bank_tree.yml
+- include: common_tasks/setup_general_bank_tree.yml
 
-- include: ../../common_tasks/setup_specific_bank_tree.yml
+- include: common_tasks/setup_specific_bank_tree.yml
 
-- include: ../../common_tasks/get_data.yml
+- include: common_tasks/get_data.yml ext=fa
 
 - name: Reformating "{{ bank_name }}" in fasta format
   become: yes
@@ -24,7 +24,7 @@
   when: not 'FASTA' in format.stderr
 
 
-- include: ../../common_tasks/link_fasta.yml
+- include: common_tasks/link_fasta.yml
 
-- include: ../../common_tasks/blast2_indexing.yml
+- include: common_tasks/blast2_indexing.yml
 
