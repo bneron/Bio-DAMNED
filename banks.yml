@@ -4,7 +4,6 @@
   remote_user: root
 
   roles:
-    - {role: setup_bank_tree, tags: ['setup']}
     - {role: genbank_genome, tags: ['cdc1551'],
        bank_name: m_tuberculosis_CDC1551,
        bank_src: "ftp://ftp.ncbi.nih.gov/genomes/archive/old_genbank/Bacteria/Mycobacterium_tuberculosis_CDC1551_uid223/AE000516.gbk"}
@@ -14,9 +13,18 @@
     - {role: fasta_bank, tags: ['silva_SSU_Nr99'],
        bank_name: silva_SSU,
        bank_src: "https://www.arb-silva.de/fileadmin/silva_databases/release_123_1/Exports/SILVA_123.1_SSURef_Nr99_tax_silva.fasta.gz"}
+    - {role: fasta_bank, tags: ['silva_LSU_tax_full_align'],
+       bank_name: silva_SSU_Nr99_tax_full_align,
+       bank_src: "https://www.arb-silva.de/fileadmin/silva_databases/release_123_1/Exports/SILVA_123.1_SSURef_Nr99_tax_silva_full_align_trunc.fasta.gz"}
     - {role: fasta_bank, tags: ['silva_LSU_tax'],
        bank_name: silva_LSU,
        bank_src: "https://www.arb-silva.de/fileadmin/silva_databases/release_123_1/Exports/SILVA_123.1_LSURef_tax_silva.fasta.gz"}
-    - {role: fasta_bank, tags: ['ncbi_16s'],
+    - {role: fasta_bank, tags: ['silva_LSU_tax_full_align'],
+       bank_name: silva_LSU_tax_full_align,
+       bank_src: "https://www.arb-silva.de/fileadmin/silva_databases/release_123_1/Exports/SILVA_123.1_LSURef_tax_silva_full_align_trunc.fasta.gz"}
+    - {role: blast_bank, tags: ['ncbi_16s'],
        bank_name: ncbi_16s,
        bank_src: "ftp://ftp.ncbi.nih.gov/blast/db/16SMicrobial.tar.gz"}
+    - {role: fasta_bank, tags: ['gg13_5'],
+       bank_name: greengenes,
+       bank_src: "ftp://greengenes.microbio.me/greengenes_release/gg_13_5/gg_13_5.fasta.gz"}
