@@ -1,11 +1,10 @@
 ---
 
-- include: ../../common_tasks/setup_general_bank_tree.yml
+- include: common_tasks/setup_general_bank_tree.yml
 
-- include: ../../common_tasks/setup_specific_bank_tree.yml
+- include: common_tasks/setup_specific_bank_tree.yml
 
-- include: ../../common_tasks/get_data.yml
-
+- include: common_tasks/get_data.yml
 
 - name: Creating blast2 directory for "{{ bank_name }}"
   become: yes
