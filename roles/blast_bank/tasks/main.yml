@@ -15,7 +15,6 @@
         group={{ bank_group }}
         mode=0775
 
-
 - name: Cleaning "{{ bank_name }}" blast2 indexes links
   become: yes
   become_user: "{{ bank_user }}"
@@ -30,20 +29,25 @@
   with_fileglob:
     - "{{ bank_root }}/{{ bank_name }}/blast2/*"
 
-
-- name: Moving and renaming "{{ bank_name }}" blast indexes in right directory
+- name: Copying and renaming "{{ bank_name }}" blast indexes in right directory
   become: yes
   become_user: "{{ bank_user }}"
-  command: mv {{ bank_root }}/{{ bank_name }}/fasta/{{ bank_name }}.fa{{ item | splitext | last }} {{ bank_root }}/{{ bank_name }}/blast2/{{ bank_name }}{{ item | splitext | last }}
+  copy:
+    src={{ item }}
+    dest={{ bank_root }}/{{ bank_name }}/blast2/{{ bank_name }}{{ item | splitext | last }}
+    remote_src=True
+    owner={{ bank_user }}
+    group={{ bank_group }}
+    mode=0644
   with_fileglob:
-    - "{{ bank_root }}/{{ bank_name }}/fasta/{{ bank_name }}.fa.*"
+    - "{{ bank_root }}/{{ bank_name }}/uncompressed/*.n*"
 
 - name: Creating links to blast2 indexes
   become: yes
   become_user: "{{ bank_user }}"
   file: >
     src={{ item }}
-    dest={{bank_root}}/index/blast2/{{ bank_name }}{{ item | splitext | last }}
+    dest={{bank_root}}/index/blast2/{{ item | basename }}
     state=link
   with_fileglob:
     - "{{ bank_root }}/{{ bank_name }}/blast2/{{ bank_name }}.*"
