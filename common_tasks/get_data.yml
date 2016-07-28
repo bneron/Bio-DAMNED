@@ -17,40 +17,39 @@
   register: mime
 
 - block:
+  - name: Uncompressing {{ bank_name }}
+    become: yes
+    become_user: "{{ bank_user }}"
+    unarchive: src={{ bank_root }}/distbanks/{{ bank_src|basename }} dest={{ bank_root }}/{{ bank_name }}/uncompressed/
 
-  - block:
-    - name: Uncompressing {{ bank_name }}
+  - name: Guessing the name of uncompressed bank
+    become: yes
+    become_user: "{{ bank_user }}"
+    find: paths={{ bank_root }}/{{ bank_name }}/uncompressed/ file_type=file
+    register: uncompressed_bank
+
+  - name: Renaming {{ bank_name }}
+    become: yes
+    become_user: "{{ bank_user }}"
+    shell: mv {{ uncompressed_bank.files[0].path }} {{ bank_root }}/{{ bank_name }}/uncompressed/{{ bank_name }}.{{ ext }}
+
+  rescue:
+    - name: Uncompressing gzip {{ bank_name }}
       become: yes
       become_user: "{{ bank_user }}"
-      unarchive: src={{ bank_root }}/distbanks/{{ bank_src|basename }} dest={{ bank_root }}/{{ bank_name }}/uncompressed/
+      shell: >
+        gunzip -c {{ bank_root }}/distbanks/{{ bank_src|basename }} > {{ bank_root }}/{{ bank_name }}/uncompressed/{{ bank_name }}.{{ ext }}
 
-    - name: Guessing the name of uncompressed bank
-      become: yes
-      become_user: "{{ bank_user }}"
-      find: paths={{ bank_root }}/{{ bank_name }}/uncompressed/ file_type=file
-      register: uncompressed_bank
+  when: mime.stat.mime_type in ['application/x-gzip', 'application/zip']
 
-    - name: Renaming {{ bank_name }}
-      become: yes
-      become_user: "{{ bank_user }}"
-      shell: mv {{ uncompressed_bank.files[0].path }} {{ bank_root }}/{{ bank_name }}/uncompressed/{{ bank_name }}.fa
-
-    rescue:
-      - name: Uncompressing gzip {{ bank_name }}
-        become: yes
-        become_user: "{{ bank_user }}"
-        shell: >
-          gunzip -c {{ bank_root }}/distbanks/{{ bank_src|basename }} > {{ bank_root }}/{{ bank_name }}/uncompressed/{{ bank_name }}.fa
-
-  when: mime.stat.mime_type in ["application/x-gzip", "application/zip"]
 
 - name: Copy "{{ bank_name }}" in bank directory
   become: yes
   become_user: "{{ bank_user }}"
   when: mime.stat.mime_type not in ["application/x-gzip", "application/zip"]
-  copy: >
+  copy:
     src={{ bank_root }}/distbanks/{{ bank_src|basename }}
-    dest={{ bank_root }}/{{ bank_name }}/uncompressed/{{ bank_name | splitext | last }}.fa
+    dest={{ bank_root }}/{{ bank_name }}/uncompressed/{{ bank_name | splitext | first }}.{{ ext }}
     remote_src=True
     owner={{ bank_user }}
     group={{ bank_group }}
