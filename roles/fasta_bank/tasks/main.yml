@@ -6,7 +6,6 @@
 
 - include: ../../common_tasks/get_data.yml
 
-
 - name: Reformating "{{ bank_name }}" in fasta format
   become: yes
   become_user: "{{ bank_user }}"
