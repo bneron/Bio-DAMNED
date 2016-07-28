@@ -1,6 +1,6 @@
 ---
 
-- name: Creating bank "{{ bank_name }}" bowtie2 directories
+- name: Creating bowtie2 directory for genome "{{ bank_name }}"
   become: yes
   become_user: "{{ bank_user }}"
   file: path={{ bank_root }}/{{ bank_name }}/bowtie2
