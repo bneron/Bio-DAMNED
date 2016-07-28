@@ -1,9 +1,9 @@
 ---
 
-- name: Creating bank "{{ bank_name }}" golden directories
+- name: Creating blast2 directory for "{{ bank_name }}"
   become: yes
   become_user: "{{ bank_user }}"
-  file: path={{ bank_root }}/{{ bank_name }}/golden
+  file: path={{ bank_root }}/{{ bank_name }}/blast2
         state=directory
         owner={{ bank_user }}
         group={{ bank_group }}
