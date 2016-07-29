@@ -116,6 +116,7 @@ Create link in general fasta directory toward the fasta file in fasta directory 
 ![Alt text](http://g.gravizo.com/g?
   digraph G {
   aize ="4,4";
+  copy_indexes [shape=box];
   setup_general_bank_tree -> setup_specific_bank_tree;
   setup_specific_bank_tree -> get_data;
   get_data -> copy_indexes;
