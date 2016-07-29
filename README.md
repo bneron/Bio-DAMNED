@@ -40,13 +40,13 @@ Prepare the file tree for the bank and indexes.
 ### setup_specific_bank_tree
 
 Create the file tree for this bank
- .1 create the directory for this bank.
- .2 create the subdirectory `uncompressed`.
+1. create the directory for this bank.
+2. create the subdirectory `uncompressed`.
 
 ### get_data
 
-.1 check if data (basename of src_bank) is in `distbanks` directory, if none download it.
-.2 copy the bank in `uncompressed` directory corresponding to this bank.
+1. check if data (basename of src_bank) is in `distbanks` directory, if none download it.
+2. copy the bank in `uncompressed` directory corresponding to this bank.
 
 It uncompress data if necessary and rename files according to bank_name
 defined in role.
@@ -57,10 +57,10 @@ Create link in general fasta directory toward the fasta file in fasta directory 
 
 ### blast2_indexing
 
-.1 clean the blast2 indexes link in general directory
-.2 remove the blast2 indexes
-.3 then compute new indexes
-.4 and creates new links
+1. clean the blast2 indexes link in general directory
+2. remove the blast2 indexes
+3. then compute new indexes
+4. and creates new links
 
 
 # Provided Workflows
