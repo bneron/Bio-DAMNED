@@ -35,21 +35,21 @@ So this common steps are design in common_tasks directory and are includes in th
 
 ### setup_general_bank_tree
 
-Prepare the file tree for the bank and indexes 
+Prepare the file tree for the bank and indexes.
 
 ### setup_specific_bank_tree
 
 Create the file tree for this bank
- * create the directory for this bank
- * create the subdirectory `uncompressed`
+ .1 create the directory for this bank.
+ .2 create the subdirectory `uncompressed`.
 
 ### get_data
 
-* check if data (basename of src_bank) is in `distbanks` directory, if none download it.
-* copy the bank in `uncompressed` directory corresponding to this bank
+.1 check if data (basename of src_bank) is in `distbanks` directory, if none download it.
+.2 copy the bank in `uncompressed` directory corresponding to this bank.
 
 It uncompress data if necessary and rename files according to bank_name
-defined in role
+defined in role.
 
 ### link_fasta
 
@@ -57,10 +57,10 @@ Create link in general fasta directory toward the fasta file in fasta directory 
 
 ### blast2_indexing
 
-* clean the blast2 indexes link in general directory
-* remove the blast2 indexes
-* then compute new indexes
-* and creates new links
+.1 clean the blast2 indexes link in general directory
+.2 remove the blast2 indexes
+.3 then compute new indexes
+.4 and creates new links
 
 
 # Provided Workflows
