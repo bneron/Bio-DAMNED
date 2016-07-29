@@ -1,4 +1,14 @@
 ---
+################################################################################
+# Bio-DAMNED - Bio-Data Ansible MaNagED                                        #
+#                                                                              #
+# Authors: Bertrand Néron                                                      #
+# Copyright © 2016  Institut Pasteur (Paris).                                  #
+#                                                                              #
+# Bio-DAMNED is distributed under the terms of the GNU General Public License  #
+# (GPLv3). See the LICENSE file for details.                                   #
+################################################################################
+
 - name: Creating bank "{{ bank_name }}" directory
   become: yes
   become_user: "{{ bank_user }}"
