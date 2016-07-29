@@ -1,5 +1,5 @@
 ---
 
-bank_user: bneron
-bank_group: users
-bank_root: /home/bneron/bank
+bank_user: <user who managed banks>
+bank_group: <group who managed banks>
+bank_root: <the absolute pah where to store all banks>
