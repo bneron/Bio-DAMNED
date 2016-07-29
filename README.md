@@ -2,8 +2,8 @@ This a small automaton to prepare biological data banks to be ready to use by bi
 It is based on ansible.
 
 It is able to download a bank or genome, uncompress it if necessary and creates indexes for a panel of
-bioinformatics tools like blast+, golden, bowtie2, bwa, ...
-The systems can be easily extend to new kind of indexes or source of data.
+bioinformatics tools like blast+, golden, bowtie2, bwa, ... .
+The system can be easily extend to new kind of indexes or source of data.
 
 # Requirements
 
@@ -20,13 +20,14 @@ The systems can be easily extend to new kind of indexes or source of data.
 The playbook give you an over view of all banks you have configured. 
 Each role match to a bank.
 In a role we assign a predefined workflow given the kind of data.
-The workflows are designed in roles/tasks/main.yml
+The workflows are designed in `roles/<name of role>/tasks/main.yml`
 Two parameters must be set for each  role:
 * bank_src: the url where the bank/genome can be downloaded
 * bank_name: the final name you want to give to this bank/genome 
 A tag is also associated for each role to allow to rebuild only one bank/genome
 of course you can add tags to rebuild a set of banks.
 
+(_genome_ is formed of __one__ sequence, _bank_ is a __set of sequences__)
 The workflows are design in roles but lot of step are common between workflows.
 So this common steps are design in common_tasks directory and are includes in the workflows (aka roles).
  
@@ -34,18 +35,18 @@ So this common steps are design in common_tasks directory and are includes in th
 
 ### setup_general_bank_tree
 
-prepare the file tree for the bank and indexes 
+Prepare the file tree for the bank and indexes 
 
 ### setup_specific_bank_tree
 
-create the file tree for this bank
+Create the file tree for this bank
  * create the directory for this bank
- * create the subdirectory uncompressed
+ * create the subdirectory `uncompressed`
 
 ### get_data
 
-* check if data (basename of src_bank) is in distbanks, if none download it.
-* copy the bank in uncompressed directory corresponding to this bank
+* check if data (basename of src_bank) is in `distbanks` directory, if none download it.
+* copy the bank in `uncompressed` directory corresponding to this bank
 
 It uncompress data if necessary and rename files according to bank_name
 defined in role
