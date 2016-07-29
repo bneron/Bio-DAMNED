@@ -65,9 +65,9 @@ Create link in general fasta directory toward the fasta file in fasta directory 
 # Provided Workflows
 
 Below the diagrams of the workflows used to prepare the bank/genome
-* The elipse box mean this step is in common_tasks, then it can used in different workflows. 
-  The desciption of this step is done in upper paragraph "Provided tasks"
-* the square box mean this step is directly coded in the workflows, then it is specific to this workflow.
+* The ellipse box mean this step is in common_tasks, then it can used in different workflows. 
+  The description of this step is done in upper paragraph "Provided tasks"
+* the square box mean this step is directly coded in the workflow, then it is specific to this workflow.
 
 ## bank in fasta format
 
