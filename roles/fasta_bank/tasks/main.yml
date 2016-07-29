@@ -6,23 +6,29 @@
 
 - include: common_tasks/get_data.yml ext=fa
 
-- name: Reformating "{{ bank_name }}" in fasta format
-  become: yes
-  become_user: "{{ bank_user }}"
-  shell: >
-    squizz -c FASTA -f FASTA {{ bank_name }}.fa >> {{ bank_root }}/{{ bank_name }}/fasta/{{ bank_name }}.fa
-    chdir={{ bank_root }}/{{ bank_name }}/uncompressed
-
 - name: Running squizz on "{{ bank_name }}"  to check format
   become: yes
   become_user: "{{ bank_user }}"
-  shell: squizz {{ bank_name }}.fa chdir={{ bank_root }}/{{ bank_name }}/fasta
+  shell: squizz {{ bank_root }}/{{ bank_name }}/uncompressed/{{ bank_name }}.fa
   register: format
 
-- name: Checking fasta format
-  fail: msg="{{ bank_name }}" not correctly formated "{{ format.stderr }}"
-  when: not 'FASTA' in format.stderr
+- name: Reformating "{{ bank_name }}" in fasta format
+  become: yes
+  become_user: "{{ bank_user }}"
+  when: "'FASTA' in format.stderr"
+  shell: squizz -c FASTA -f FASTA {{ bank_root }}/{{ bank_name }}/uncompressed/{{ bank_name }}.fa > {{ bank_root }}/{{ bank_name }}/fasta/{{ bank_name }}.fa
 
+- name: Copying {{ bank_name }} in fasta subdirectory without reformating
+  become: yes
+  become_user: "{{ bank_user }}"
+  when: "not 'FASTA' in format.stderr"
+  copy:
+    src={{ bank_root }}/{{ bank_name }}/uncompressed/{{ bank_name }}.fa
+    dest={{ bank_root }}/{{ bank_name }}/fasta/{{ bank_name }}.fa
+    remote_src=True
+    owner={{ bank_user }}
+    group={{ bank_group }}
+    mode=0644
 
 - include: common_tasks/link_fasta.yml
 
