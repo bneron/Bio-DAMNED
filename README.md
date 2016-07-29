@@ -69,6 +69,7 @@ Create link in general fasta directory toward the fasta file in fasta directory 
 ![Alt text](http://g.gravizo.com/g?
   digraph G {
   aize ="4,4";
+  specific_fasta_stuff [shape=box];
   setup_general_bank_tree -> setup_specific_bank_tree;
   setup_specific_bank_tree -> get_data;
   get_data -> specific_fasta_stuff;
@@ -90,6 +91,7 @@ Create link in general fasta directory toward the fasta file in fasta directory 
 ![Alt text](http://g.gravizo.com/g?
   digraph G {
   aize ="4,4";
+  reformatting_in_fasta [shape=box];
   setup_general_bank_tree -> setup_specific_bank_tree;
   setup_specific_bank_tree -> get_data;
   get_data -> reformatting_in_fasta;
