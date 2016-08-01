@@ -1,4 +1,5 @@
-This a small automaton to prepare biological data banks to be ready to use by bioinformatics tools.
+This based on BIO-DAMNED project ([fork me here](https://github.com/bneron/Bio-DAMNED)) 
+to prepare biological data banks to be ready to use by bioinformatics tools.
 It is based on ansible.
 
 It is able to download a bank or genome, uncompress it if necessary and creates indexes for a panel of
