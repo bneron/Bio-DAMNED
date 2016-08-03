@@ -51,7 +51,7 @@ Create the file tree for this bank
 It uncompress data if necessary and rename files according to bank_name
 defined in role.
 
-[https://cloud.githubusercontent.com/assets/1140846/17358092/5092ce70-5960-11e6-8302-28dc9b3e2771.png]
+[attention icon](https://cloud.githubusercontent.com/assets/1140846/17358092/5092ce70-5960-11e6-8302-28dc9b3e2771.png)
 You need to pass an extra parameter to this task. The extension `fa` if you work with fasta file
 or `gbk` if you work on genbank file
 for instance:
