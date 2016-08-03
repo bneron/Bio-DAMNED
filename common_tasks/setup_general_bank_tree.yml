@@ -9,6 +9,19 @@
 # (GPLv3). See the LICENSE file for details.                                   #
 ################################################################################
 
+- name: Creation of {{ bank_group }} group
+  group:
+    name={{ bank_group}}
+    state=present
+
+- name: Creation of {{ bank_user }} user
+  user:
+    name={{ bank_user}}
+    comment="biological data bank user"
+    home={{ bank_root }}
+    shell=/bin/bash
+    state=present
+
 - name: create bank tree root
   file: path={{ bank_root }} state=directory owner={{ bank_user }} group={{ bank_group }} mode=775
 
