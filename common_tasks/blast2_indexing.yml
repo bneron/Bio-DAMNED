@@ -36,11 +36,7 @@
   become: yes
   become_user: "{{ bank_user }}"
   #formatdb  -t "{{ bank_name }}" -p F -n "{{ bank_name }}" -i {{ bank_root }}/{{ bank_name }}/fasta/{{ bank_name }}.fa -l /dev/null
-  shell:
-    "source {{ module_init }} && \
-     module load  blast+/2.2.31 && \
-     makeblastdb -title {{ bank_name }} -in {{ bank_root }}/{{ bank_name }}/fasta/{{ bank_name }}.fa -dbtype nucl"
-    chdir={{ bank_root }}/{{ bank_name }}/blast2
+  shell: "source {{ module_init }} && module load  blast+/2.2.31 && makeblastdb -title {{ bank_name }} -in {{ bank_root }}/{{ bank_name }}/fasta/{{ bank_name }}.fa -dbtype nucl"
 
 - name: Moving and renaming "{{ bank_name }}" blast indexes in right directory
   become: yes
