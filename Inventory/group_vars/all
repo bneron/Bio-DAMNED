@@ -1,5 +1,5 @@
 ---
 
-bank_user: <user who managed banks>
-bank_group: <group who managed banks>
-bank_root: <the absolute pah where to store all banks>
+bank_user: bank
+bank_group: bank
+bank_root: /data/bank
