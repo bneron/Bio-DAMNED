@@ -3,3 +3,4 @@
 bank_user: bank
 bank_group: bank
 bank_root: /data/bank
+module_init: /local/gensoft2/adm/etc/profile.d/modules.sh

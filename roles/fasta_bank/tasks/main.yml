@@ -18,14 +18,20 @@
 - name: Running squizz on "{{ bank_name }}"  to check format
   become: yes
   become_user: "{{ bank_user }}"
-  shell: squizz {{ bank_root }}/{{ bank_name }}/uncompressed/{{ bank_name }}.fa
+  shell:
+    "source {{ module_init }} && \
+     module load squizz/0.99c && \
+     squizz {{ bank_root }}/{{ bank_name }}/uncompressed/{{ bank_name }}.fa"
   register: format
 
 - name: Reformating "{{ bank_name }}" in fasta format
   become: yes
   become_user: "{{ bank_user }}"
   when: "'FASTA' in format.stderr"
-  shell: squizz -c FASTA -f FASTA {{ bank_root }}/{{ bank_name }}/uncompressed/{{ bank_name }}.fa > {{ bank_root }}/{{ bank_name }}/fasta/{{ bank_name }}.fa
+  shell:
+    "source {{ module_init }} && \
+     module load squizz/0.99c && \
+     squizz -c FASTA -f FASTA {{ bank_root }}/{{ bank_name }}/uncompressed/{{ bank_name }}.fa > {{ bank_root }}/{{ bank_name }}/fasta/{{ bank_name }}.fa"
 
 - name: Copying {{ bank_name }} in fasta subdirectory without reformating
   become: yes
