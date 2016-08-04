@@ -3,3 +3,4 @@
 bank_user: <user who managed banks>
 bank_group: <group who managed banks>
 bank_root: <the absolute pah where to store all banks>
+module_init: /local/gensoft2/adm/etc/profile.d/modules.sh
