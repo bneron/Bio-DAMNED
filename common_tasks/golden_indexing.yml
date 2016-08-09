@@ -34,11 +34,10 @@
     goldin -d {{ bank_name }} {{ bank_name }} {{ bank_root }}/{{ bank_name }}/uncompressed/{{ bank_name }}.gbk
     chdir={{ bank_root }}/{{ bank_name }}/golden
 
-
 - name: creating "{{ bank_name }}" links to golden indexes
   become: yes
   become_user: "{{ bank_user }}"
-  file: >
+  file:
     src={{bank_root}}/{{ bank_name }}/golden/{{ bank_name }}.{{ item }}
     dest={{bank_root}}/index/golden/{{ bank_name }}.{{ item }}
     state=link
@@ -46,3 +45,11 @@
     - acx
     - dbx
     - idx
+
+- name: Creating link to databank
+  become: yes
+  become_user: "{{ bank_user }}"
+  file:
+    src={{ bank_root }}/bank_name/uncompressed/
+    dest={{ bank_root }}/index/golden/{{ bank_name }}
+    state=link
