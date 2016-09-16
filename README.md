@@ -15,7 +15,7 @@ The system can be easily extended to new kind of indexes or sources of data.
     * bwa
     * ...
 
-# Architecure
+# Architecture
 
 The playbook give you an overview of all banks you have configured.
 Each role is matched to a bank. In a role we assign a predefined workflow
