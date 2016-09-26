@@ -1,37 +1,37 @@
 This based on BIO-DAMNED project ([fork me here](https://github.com/bneron/Bio-DAMNED)) 
 to prepare biological data banks to be ready to use by bioinformatics tools.
 It is based on ansible.
-
-It is able to download a bank or genome, uncompress it if necessary and creates indexes for a panel of
-bioinformatics tools like blast+, golden, bowtie2, bwa, ... .
-The system can be easily extend to new kind of indexes or source of data.
+It is able to download a bank or genome, uncompress it if necessary, and create
+indexes for a panel of bioinformatics tools like blast+, golden, bowtie2, bwa, ....
+The system can be easily extended to new kind of indexes or sources of data.
 
 # Requirements
 
- 1. ansible >= 2.1.0.0
- 2. and bioinformatics tools needed to creates indexes 
+ 1. Ansible >= 2.1.0.0
+ 2. and bioinformatics tools needed to creates indexes
     * makeblastdb
     * goldin
     * bowtie2
     * bwa
     * ...
- 
-# Architecure
 
-The playbook give you an over view of all banks you have configured. 
-Each role match to a bank.
-In a role we assign a predefined workflow given the kind of data.
+# Architecture
+
+The playbook give you an overview of all banks you have configured.
+Each role is matched to a bank. In a role we assign a predefined workflow
+given the kind of data.
 The workflows are designed in `roles/<name of role>/tasks/main.yml`
-Two parameters must be set for each  role:
+Two parameters must be set for each role:
 * bank_src: the url where the bank/genome can be downloaded
-* bank_name: the final name you want to give to this bank/genome 
-A tag is also associated for each role to allow to rebuild only one bank/genome
-of course you can add tags to rebuild a set of banks.
+* bank_name: the final name you want to give to this bank/genome
+A tag is also associated with each role to allow you to rebuild only one
+bank/genome, and of course you can add tags to rebuild a set of banks.
 
 (_genome_ is formed of __one__ sequence, _bank_ is a __set of sequences__)
-The workflows are design in roles but lot of step are common between workflows.
-So this common steps are design in common_tasks directory and are includes in the workflows (aka roles).
- 
+The workflows are designed with roles but lot of steps are common between workflows.
+These common steps are found in the common_tasks directory and are included
+in the workflows (AKA roles).
+
 ## Provided tasks
 
 ### setup_general_bank_tree
@@ -46,36 +46,33 @@ Create the file tree for this bank
 
 ### get_data
 
-1. check if data (basename of src_bank) is in `distbanks` directory, if none download it.
+1. check if data (basename of src_bank) is in the `distbanks` directory, if not then download it.
 2. copy the bank in `uncompressed` directory corresponding to this bank.
 
-It uncompress data if necessary and rename files according to bank_name
+It will uncompress data if necessary and rename files according to bank_name
 defined in role.
 
 ![attention icon](https://cloud.githubusercontent.com/assets/1140846/17358092/5092ce70-5960-11e6-8302-28dc9b3e2771.png)
 You need to pass an extra parameter to this task. The extension `fa` if you work with fasta file
-or `gbk` if you work on genbank file
-for instance:
+or `gbk` if you work with genbank files. For instance:
 
 `- include: common_tasks/get_data.yml ext=fa`
 
-
 ### link_fasta
 
-Create link in general fasta directory toward the fasta file in fasta directory of the bank
+Create link in the general fasta directory to the fasta file in the fasta directory of the bank.
 
 ### blast2_indexing
 
-1. clean the blast2 indexes link in general directory
+1. clean the blast2 index links in the general directory
 2. remove the blast2 indexes
 3. then compute new indexes
 4. and creates new links
 
-
 # Provided Workflows
 
-Below the diagrams of the workflows used to prepare the bank/genome
-* The ellipse box mean this step is in common_tasks, then it can used in different workflows. 
+The diagrams of the workflows used to prepare the bank/genome are below.
+* The ellipse box mean this step is in common_tasks, then it can used in different workflows.
   The description of this step is done in upper paragraph "Provided tasks"
 * the square box mean this step is directly coded in the workflow, then it is specific to this workflow.
 
@@ -101,7 +98,7 @@ Below the diagrams of the workflows used to prepare the bank/genome
   bowtie2_indexing -> bwa_indexing;
   }
 )
-  
+
 ## bank in genbank format
 ![Alt text](http://g.gravizo.com/g?
   digraph G {
@@ -115,7 +112,7 @@ Below the diagrams of the workflows used to prepare the bank/genome
   golden_indexing -> blast2_indexing;
   }
 )
-  
+
 ## genome in genbank format
 
 ![Alt text](http://g.gravizo.com/g?
