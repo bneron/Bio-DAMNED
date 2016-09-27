@@ -1,0 +1,50 @@
+---
+################################################################################
+# Bio-DAMNED - Bio-Data Ansible MaNagED                                        #
+#                                                                              #
+# Authors: Bertrand Néron                                                      #
+# Copyright © 2016  Institut Pasteur (Paris).                                  #
+#                                                                              #
+# Bio-DAMNED is distributed under the terms of the GNU General Public License  #
+# (GPLv3). See the LICENSE file for details.                                   #
+################################################################################
+
+- name: Creating picard directory for "{{ bank_name }}" genome
+  become: yes
+  become_user: "{{ bank_user }}"
+  file: path={{ bank_root }}/{{ bank_name }}/picard
+        state=directory
+        owner={{ bank_user }}
+        group={{ bank_group }}
+        mode=0775
+
+- name: Cleaning "{{ bank_name }}" picard indexes links
+  become: yes
+  become_user: "{{ bank_user }}"
+  file: path={{bank_root}}/index/picard/{{ bank_name | basename }} state=absent
+  with_fileglob:
+    - "{{ bank_root }}/{{ bank_name }}/picard/*"
+
+- name: Cleaning "{{ bank_name }}" old picard indexes
+  become: yes
+  become_user: "{{ bank_user }}"
+  file: >
+    path={{ item }}
+    state=absent
+  with_fileglob:
+    - "{{ bank_root }}/{{ bank_name }}/picard/*"
+
+- name: Indexing "{{ bank_name }}" for picard
+  become: yes
+  become_user: "{{ bank_user }}"
+  shell: CreateSequenceDictionary REFERENCE={{ bank_root }}/{{ bank_name }}/fasta/{{ bank_name }}.fa  OUTPUT={{ bank_root }}/{{ bank_name }}/picard/{{ bank_name }}.dict CREATE_INDEX=true
+
+- name: Creating links for "{{ bank_name }}" picard indexes
+  become: yes
+  become_user: "{{ bank_user }}"
+  file: >
+    src={{ item }}
+    dest={{ bank_root }}/index/picard/{{ item | basename }}
+    state=link
+  with_fileglob:
+    - "{{ bank_root }}/{{ bank_name }}/picard/{{ bank_name }}*"

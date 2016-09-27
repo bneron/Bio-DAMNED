@@ -11,6 +11,15 @@
 
 - include: ../genbank_bank/tasks/main.yml
 
+- include: common_tasks/bwa_indexing.yml
+
+- include: common_tasks/soap_indexing.yml
+
+- include: common_tasks/bowtie_indexing.yml
+
 - include: common_tasks/bowtie2_indexing.yml
 
-- include: common_tasks/bwa_indexing.yml
+- include: common_tasks/picard_indexing.yml
+
+- include: common_tasks/samtools_indexing.yml
+
