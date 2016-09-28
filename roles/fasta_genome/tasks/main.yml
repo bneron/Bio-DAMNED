@@ -22,3 +22,5 @@
 - include: common_tasks/picard_indexing.yml
 
 - include: common_tasks/samtools_indexing.yml
+
+- include: common_tasks/gatk_indexing.yml

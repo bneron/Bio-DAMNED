@@ -23,3 +23,7 @@
 
 - include: common_tasks/samtools_indexing.yml
 
+- include: common_tasks/gatk_indexing.yml
+
+
+

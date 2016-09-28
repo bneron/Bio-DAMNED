@@ -1,0 +1,55 @@
+---
+################################################################################
+# Bio-DAMNED - Bio-Data Ansible MaNagED                                        #
+#                                                                              #
+# Authors: Bertrand Néron                                                      #
+# Copyright © 2016  Institut Pasteur (Paris).                                  #
+#                                                                              #
+# Bio-DAMNED is distributed under the terms of the GNU General Public License  #
+# (GPLv3). See the LICENSE file for details.                                   #
+################################################################################
+
+- name: Creating gatk directory for genome "{{ bank_name }}"
+  become: yes
+  become_user: "{{ bank_user }}"
+  file: path={{ bank_root }}/{{ bank_name }}/gatk
+        state=directory
+        owner={{ bank_user }}
+        group={{ bank_group }}
+        mode=0775
+
+#- name: Cleaning link
+#  become: yes
+#  become_user: "{{ bank_user }}"
+#  file: path={{bank_root}}/index/gatk/{{ item }}
+#        state=absent
+#  with_fileglob:
+#    - "{ bank_root }}/{{ bank_name }}/gatk/*"
+
+- name: Creating samtools link for "{{ bank_name }}" gatk indexes
+  become: yes
+  become_user: "{{ bank_user }}"
+  file: src={{ item }}
+        dest={{ bank_root }}/{{ bank_name }}/gatk/{{ item | basename }}
+        state=link
+  with_fileglob:
+    - "{{ bank_root }}/{{ bank_name }}/samtools/*"
+
+- name: Creating picard tools link for "{{ bank_name }}" gatk indexes
+  become: yes
+  become_user: "{{ bank_user }}"
+  file: src={{ item }}
+        dest={{ bank_root }}/{{ bank_name }}/gatk/{{ item | basename }}
+        state=link
+  with_fileglob:
+    - "{{ bank_root }}/{{ bank_name }}/picard/*.dict"
+
+- name: Creating links for "{{ bank_name }}" gatk indexes
+  become: yes
+  become_user: "{{ bank_user }}"
+  file: >
+    src={{ item }}
+    dest={{ bank_root }}/index/gatk/{{ item | basename }}
+    state=link
+  with_fileglob:
+    - "{{ bank_root }}/{{ bank_name }}/gatk/*"
