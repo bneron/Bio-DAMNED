@@ -21,7 +21,8 @@
 - name: Cleaning "{{ bank_name }}" bowtie2 indexes links
   become: yes
   become_user: "{{ bank_user }}"
-  file: path={{bank_root}}/index/bowtie2/{{ bank_name | basename }} state=absent
+  file: path={{bank_root}}/index/bowtie2/{{ item | basename }}
+        state=absent
   with_fileglob:
     - "{{ bank_root }}/{{ bank_name }}/bowtie2/*"
 

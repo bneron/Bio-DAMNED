@@ -21,7 +21,8 @@
 - name: cleaning "{{ bank_name }}" golden indexes
   become: yes
   become_user: "{{ bank_user }}"
-  file: path={{bank_root}}/{{bank_name}}/golden/{{ bank_name }}}.{{ item }} state=absent
+  file: path={{bank_root}}/{{bank_name}}/golden/{{ bank_name }}}.{{ item }}
+        state=absent
   with_items:
     - acx
     - dbx

@@ -21,7 +21,8 @@
 - name: Cleaning "{{ bank_name }}" soap indexes links
   become: yes
   become_user: "{{ bank_user }}"
-  file: path={{bank_root}}/index/soap/{{ bank_name | basename }} state=absent
+  file: path={{bank_root}}/index/soap/{{ item | basename }}
+        state=absent
   with_fileglob:
     - "{{ bank_root }}/{{ bank_name }}/soap/*"
 

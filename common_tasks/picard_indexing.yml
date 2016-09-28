@@ -21,7 +21,8 @@
 - name: Cleaning "{{ bank_name }}" picard indexes links
   become: yes
   become_user: "{{ bank_user }}"
-  file: path={{bank_root}}/index/picard/{{ bank_name | basename }} state=absent
+  file: path={{bank_root}}/index/picard/{{ item | basename }}
+        state=absent
   with_fileglob:
     - "{{ bank_root }}/{{ bank_name }}/picard/*"
 
