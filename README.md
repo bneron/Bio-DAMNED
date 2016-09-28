@@ -94,8 +94,13 @@ The diagrams of the workflows used to prepare the bank/genome are below.
 ![Alt text](http://g.gravizo.com/g?
   digraph G {
   aize ="4,4";
-  bank_fasta -> bowtie2_indexing;
-  bowtie2_indexing -> bwa_indexing;
+  bank_fasta -> bwa_indexing;
+  bwa_indexing -> soap_indexing;
+  soap_indexing -> bowtie_indexing;
+  bowtie_indexing -> bowtie2_indexing;
+  bowtie2_indexing -> picard_indexing;
+  picard_indexing -> samtools_indexing;
+  samtools_indexing -> gatk_indexing;
   }
 )
 
@@ -118,8 +123,13 @@ The diagrams of the workflows used to prepare the bank/genome are below.
 ![Alt text](http://g.gravizo.com/g?
   digraph G {
   aize ="4,4";
-  bank_genkank -> bowtie2_indexing;
-  bowtie2_indexing -> bwa_indexing;
+  bank_genkank -> bwa_indexing;
+  bwa_indexing -> soap_indexing;
+  soap_indexing -> bowtie_indexing;
+  bowtie_indexing -> bowtie2_indexing;
+  bowtie2_indexing -> picard_indexing;
+  picard_indexing -> samtools_indexing;
+  samtools_indexing -> gatk_indexing;
   }
 )
 
