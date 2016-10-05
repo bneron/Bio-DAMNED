@@ -32,6 +32,8 @@
   become: yes
   become_user: "{{ bank_user }}"
   shell: >
+    source "{{ module_init }}" && \
+    module load golden/{{ golden_vers }} && \
     goldin -d {{ bank_name }} {{ bank_name }} {{ bank_root }}/{{ bank_name }}/uncompressed/{{ bank_name }}.gbk
     chdir={{ bank_root }}/{{ bank_name }}/golden/{{ golden_vers }}
 

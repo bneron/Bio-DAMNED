@@ -38,6 +38,8 @@
   become_user: "{{ bank_user }}"
   #formatdb  -t "{{ bank_name }}" -p F -n "{{ bank_name }}" -i {{ bank_root }}/{{ bank_name }}/fasta/{{ bank_name }}.fa -l /dev/null
   shell: >
+    source "{{ module_init }}" && \
+    module load blast2/{{ blast2_vers }} && \
     formatdb  -t "{{ bank_name }}" -n "{{ bank_name }}" -i {{ bank_root }}/{{ bank_name }}/fasta/{{ bank_name }}.fa  -p F -l /dev/null
     chdir={{ bank_root }}/{{ bank_name }}/blast2
 

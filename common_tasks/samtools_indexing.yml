@@ -39,7 +39,9 @@
   become: yes
   become_user: "{{ bank_user }}"
   shell: >
-     samtools faidx {{ bank_root }}/{{ bank_name }}/fasta/{{ bank_name }}.fa
+    source "{{ module_init }}" && \
+    module load samtools/{{ samtools_vers }} && \
+    samtools faidx {{ bank_root }}/{{ bank_name }}/fasta/{{ bank_name }}.fa
 
 - name: Creating links for {{ bank_name }} samtools indexes
   become: yes

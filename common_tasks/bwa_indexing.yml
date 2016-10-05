@@ -38,7 +38,10 @@
 - name: Indexing "{{ bank_name }}/{{ bwa_vers }}" for bwa
   become: yes
   become_user: "{{ bank_user }}"
-  shell: bwa index -a bwtsw -p {{ bank_root }}/{{ bank_name }}/bwa/{{ bwa_vers }}/{{ bank_name }} {{ bank_root }}/{{ bank_name }}/fasta/{{ bank_name }}.fa
+  shell: >
+    source "{{ module_init }}" && \
+    module load bwa/{{ bwa_vers }} && \
+    bwa index -a bwtsw -p {{ bank_root }}/{{ bank_name }}/bwa/{{ bwa_vers }}/{{ bank_name }} {{ bank_root }}/{{ bank_name }}/fasta/{{ bank_name }}.fa
 
 - name: Creating links for "{{ bank_name }}/{{ bwa_vers }}" bwa indexes
   become: yes

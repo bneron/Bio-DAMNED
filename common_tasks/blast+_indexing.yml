@@ -37,6 +37,8 @@
   become: yes
   become_user: "{{ bank_user }}"
   shell: >
+    source "{{ module_init }}" && \
+    module load blast+/{{ blast+_vers }} && \
     makeblastdb -title {{ bank_name }} -in {{ bank_root }}/{{ bank_name }}/fasta/{{ bank_name }}.fa -dbtype nucl -logfile /dev/null
     chdir={{ bank_root }}/{{ bank_name }}/blast+
 
