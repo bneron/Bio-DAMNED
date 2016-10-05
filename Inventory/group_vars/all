@@ -3,3 +3,4 @@
 bank_user: <user who managed banks>
 bank_group: <group who managed banks>
 bank_root: <the absolute path where to store all banks>
+indexers: <list of tools used for indexing with their respective versions see doc>

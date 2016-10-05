@@ -9,42 +9,42 @@
 # (GPLv3). See the LICENSE file for details.                                   #
 ################################################################################
 
-- name: Creating blast2 directory for "{{ bank_name }}"
+- name: Creating blast2 directory for "{{ bank_name }}/{{ blast2_vers }}"
   become: yes
   become_user: "{{ bank_user }}"
-  file: path={{ bank_root }}/{{ bank_name }}/blast2
+  file: path={{ bank_root }}/{{ bank_name }}/blast2/{{ blast2_vers }}
         state=directory
         owner={{ bank_user }}
         group={{ bank_group }}
         mode=0775
 
-- name: Cleaning "{{ bank_name }}" blast2 indexes links
+- name: Cleaning "{{ bank_name }}/{{ blast2_vers }}" blast2 indexes links
   become: yes
   become_user: "{{ bank_user }}"
-  file: path={{bank_root}}/index/blast2/{{ item | basename }}
+  file: path={{bank_root}}/index/blast2/{{ blast2_vers }}/{{ item | basename }}
         state=absent
   with_fileglob:
-    - "{{ bank_root }}/{{ bank_name }}/blast2/*"
+    - "{{ bank_root }}/{{ bank_name }}/blast2/{{ blast2_vers }}/*"
 
-- name: Cleaning "{{ bank_name }}" blast2 indexes
+- name: Cleaning "{{ bank_name }}/{{ blast2_vers }}" blast2 indexes
   become: yes
   become_user: "{{ bank_user }}"
   file: path={{ item }} state=absent
   with_fileglob:
-    - "{{ bank_root }}/{{ bank_name }}/blast2/*"
+    - "{{ bank_root }}/{{ bank_name }}/blast2/{{ blast2_vers }}/*"
 
-- name: Creating blast2 indexes
+- name: Creating blast2 indexes for  "{{ bank_name }}/{{ blast2_vers }}"
   become: yes
   become_user: "{{ bank_user }}"
   #formatdb  -t "{{ bank_name }}" -p F -n "{{ bank_name }}" -i {{ bank_root }}/{{ bank_name }}/fasta/{{ bank_name }}.fa -l /dev/null
   shell: >
-    makeblastdb -title {{ bank_name }} -in {{ bank_root }}/{{ bank_name }}/fasta/{{ bank_name }}.fa -dbtype nucl
+    formatdb  -t "{{ bank_name }}" -n "{{ bank_name }}" -i {{ bank_root }}/{{ bank_name }}/fasta/{{ bank_name }}.fa  -p F -l /dev/null
     chdir={{ bank_root }}/{{ bank_name }}/blast2
 
-- name: Moving and renaming "{{ bank_name }}" blast indexes in right directory
+- name: Moving and renaming "{{ bank_name }}/{{ blast2_vers }}" blast indexes in right directory
   become: yes
   become_user: "{{ bank_user }}"
-  command: mv {{ bank_root }}/{{ bank_name }}/fasta/{{ bank_name }}.fa{{ item | splitext | last }} {{ bank_root }}/{{ bank_name }}/blast2/{{ bank_name }}{{ item | splitext | last }}
+  command: mv {{ bank_root }}/{{ bank_name }}/fasta/{{ bank_name }}.fa{{ item | splitext | last }} {{ bank_root }}/{{ bank_name }}/blast2/{{ blast2_vers }}/{{ bank_name }}{{ item | splitext | last }}
   with_fileglob:
     - "{{ bank_root }}/{{ bank_name }}/fasta/{{ bank_name }}.fa.*"
 
@@ -53,7 +53,7 @@
   become_user: "{{ bank_user }}"
   file: >
     src={{ item }}
-    dest={{bank_root}}/index/blast2/{{ bank_name }}{{ item | splitext | last }}
+    dest={{bank_root}}/index/blast2/{{ blast2_vers }}/{{ bank_name }}{{ item | splitext | last }}
     state=link
   with_fileglob:
-    - "{{ bank_root }}/{{ bank_name }}/blast2/{{ bank_name }}.*"
+    - "{{ bank_root }}/{{ bank_name }}/blast2/{{ blast2_vers }}/{{ bank_name }}.*"

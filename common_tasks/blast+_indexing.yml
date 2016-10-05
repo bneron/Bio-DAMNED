@@ -1,0 +1,58 @@
+---
+################################################################################
+# Bio-DAMNED - Bio-Data Ansible MaNagED                                        #
+#                                                                              #
+# Authors: Bertrand Néron                                                      #
+# Copyright © 2016  Institut Pasteur (Paris).                                  #
+#                                                                              #
+# Bio-DAMNED is distributed under the terms of the GNU General Public License  #
+# (GPLv3). See the LICENSE file for details.                                   #
+################################################################################
+
+- name: Creating blast+ directory for "{{ bank_name }}/{{ blast+_vers }}"
+  become: yes
+  become_user: "{{ bank_user }}"
+  file: path={{ bank_root }}/{{ bank_name }}/blast+/{{ blast+_vers }}
+        state=directory
+        owner={{ bank_user }}
+        group={{ bank_group }}
+        mode=0775
+
+- name: Cleaning "{{ bank_name }}/{{ blast+_vers }}" blast+ indexes links
+  become: yes
+  become_user: "{{ bank_user }}"
+  file: path={{bank_root}}/index/blast+/{{ blast+_vers }}/{{ item | basename }}
+        state=absent
+  with_fileglob:
+    - "{{ bank_root }}/{{ bank_name }}/blast+/{{ blast+_vers }}/*"
+
+- name: Cleaning "{{ bank_name }}/{{ blast+_vers }}" blast+ indexes
+  become: yes
+  become_user: "{{ bank_user }}"
+  file: path={{ item }} state=absent
+  with_fileglob:
+    - "{{ bank_root }}/{{ bank_name }}/blast+/{{ blast+_vers }}/*"
+
+- name: Creating blast+ indexes for  "{{ bank_name }}/{{ blast+_vers }}"
+  become: yes
+  become_user: "{{ bank_user }}"
+  shell: >
+    makeblastdb -title {{ bank_name }} -in {{ bank_root }}/{{ bank_name }}/fasta/{{ bank_name }}.fa -dbtype nucl -logfile /dev/null
+    chdir={{ bank_root }}/{{ bank_name }}/blast+
+
+- name: Moving and renaming "{{ bank_name }}/{{ blast+_vers }}" blast indexes in right directory
+  become: yes
+  become_user: "{{ bank_user }}"
+  command: mv {{ bank_root }}/{{ bank_name }}/fasta/{{ bank_name }}.fa{{ item | splitext | last }} {{ bank_root }}/{{ bank_name }}/blast+/{{ blast+_vers }}/{{ bank_name }}{{ item | splitext | last }}
+  with_fileglob:
+    - "{{ bank_root }}/{{ bank_name }}/fasta/{{ bank_name }}.fa.*"
+
+- name: Creating links to blast+ indexes
+  become: yes
+  become_user: "{{ bank_user }}"
+  file: >
+    src={{ item }}
+    dest={{bank_root}}/index/blast+/{{ blast+_vers }}/{{ bank_name }}{{ item | splitext | last }}
+    state=link
+  with_fileglob:
+    - "{{ bank_root }}/{{ bank_name }}/blast+/{{ blast+_vers }}/{{ bank_name }}.*"
