@@ -68,7 +68,7 @@ indexers:
 
 # Banks architecture
     
-All bank are located in and have the following structure 
+All bank are located in \<bank_root\> and have the following structure 
 <pre>
 &lt;bank_root&gt;
    |------>distbanks
