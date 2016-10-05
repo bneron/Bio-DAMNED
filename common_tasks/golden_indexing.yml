@@ -51,6 +51,6 @@
   become: yes
   become_user: "{{ bank_user }}"
   file:
-    src={{ bank_root }}/bank_name/uncompressed/
+    src={{ bank_root }}/{{ bank_name }}/uncompressed/
     dest={{ bank_root }}/index/golden/{{ bank_name }}
     state=link
