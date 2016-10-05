@@ -9,37 +9,38 @@
 # (GPLv3). See the LICENSE file for details.                                   #
 ################################################################################
 
-- name: Creating bank "{{ bank_name }}" golden directories
+- name: Creating bank "{{ bank_name }}/{{ golden_vers }}" golden directories
   become: yes
   become_user: "{{ bank_user }}"
-  file: path={{ bank_root }}/{{ bank_name }}/golden
+  file: path={{ bank_root }}/{{ bank_name }}/golden/{{ golden_vers }}
         state=directory
         owner={{ bank_user }}
         group={{ bank_group }}
         mode=0775
 
-- name: cleaning "{{ bank_name }}" golden indexes
+- name: cleaning "{{ bank_name }}/{{ golden_vers }}" golden indexes
   become: yes
   become_user: "{{ bank_user }}"
-  file: path={{bank_root}}/{{bank_name}}/golden/{{ bank_name }}}.{{ item }} state=absent
+  file: path={{bank_root}}/{{bank_name}}/golden/{{ golden_vers }}/{{ bank_name }}}.{{ item }}
+        state=absent
   with_items:
     - acx
     - dbx
     - idx
 
-- name: creating "{{ bank_name }}" new golden indexes
+- name: creating "{{ bank_name }}/{{ golden_vers }}" new golden indexes
   become: yes
   become_user: "{{ bank_user }}"
   shell: >
     goldin -d {{ bank_name }} {{ bank_name }} {{ bank_root }}/{{ bank_name }}/uncompressed/{{ bank_name }}.gbk
-    chdir={{ bank_root }}/{{ bank_name }}/golden
+    chdir={{ bank_root }}/{{ bank_name }}/golden/{{ golden_vers }}
 
-- name: creating "{{ bank_name }}" links to golden indexes
+- name: creating "{{ bank_name }}/{{ golden_vers }}" links to golden indexes
   become: yes
   become_user: "{{ bank_user }}"
   file:
-    src={{bank_root}}/{{ bank_name }}/golden/{{ bank_name }}.{{ item }}
-    dest={{bank_root}}/index/golden/{{ bank_name }}.{{ item }}
+    src={{bank_root}}/{{ bank_name }}/golden/{{ golden_vers }}/{{ bank_name }}.{{ item }}
+    dest={{bank_root}}/index/golden/{{ golden_vers }}/{{ bank_name }}.{{ item }}
     state=link
   with_items:
     - acx
@@ -50,6 +51,6 @@
   become: yes
   become_user: "{{ bank_user }}"
   file:
-    src={{ bank_root }}/bank_name/uncompressed/
-    dest={{ bank_root }}/index/golden/{{ bank_name }}
+    src={{ bank_root }}/{{ bank_name }}/uncompressed/
+    dest={{ bank_root }}/index/golden/{{ golden_vers }}/{{ bank_name }}
     state=link

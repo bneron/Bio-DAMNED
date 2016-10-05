@@ -9,44 +9,44 @@
 # (GPLv3). See the LICENSE file for details.                                   #
 ################################################################################
 
-- name: Creating bowtie2 directory for genome "{{ bank_name }}/{{ bowtie2_vers }}"
+- name: Creating bowtie directory for genome "{{ bank_name }}/{{ bowtie_vers }}"
   become: yes
   become_user: "{{ bank_user }}"
-  file: path={{ bank_root }}/{{ bank_name }}/{{ bowtie2_vers }}/bowtie2
+  file: path={{ bank_root }}/{{ bank_name }}/bowtie/{{ bowtie_vers }}
         state=directory
         owner={{ bank_user }}
         group={{ bank_group }}
         mode=0775
 
-- name: Cleaning "{{ bank_name }}/{{ bowtie2_vers }}" bowtie2 indexes links
+- name: Cleaning "{{ bank_name }}/{{ bowtie_vers }}" bowtie indexes links
   become: yes
   become_user: "{{ bank_user }}"
-  file: path={{bank_root}}/index/bowtie2/{{ bowtie2_vers }}/{{ item | basename }}
+  file: path={{bank_root}}/index/bowtie/{{ bowtie_vers }}/{{ item | basename }}
         state=absent
   with_fileglob:
-    - "{{ bank_root }}/{{ bank_name }}/bowtie2/{{ bowtie2_vers }}/*"
+    - "{{ bank_root }}/{{ bank_name }}/bowtie/{{ bowtie_vers }}/*"
 
-- name: Cleaning "{{ bank_name }}/{{ bowtie2_vers }}" old bowtie2 indexes
+- name: Cleaning "{{ bank_name }}/{{ bowtie_vers }}" old bowtie indexes
   become: yes
   become_user: "{{ bank_user }}"
   file: >
     path={{ item }}
     state=absent
   with_fileglob:
-    - "{{ bank_root }}/{{ bank_name }}/bowtie2/{{ bowtie2_vers }}*"
+    - "{{ bank_root }}/{{ bank_name }}/bowtie/{{ bowtie_vers }}/*"
 
-- name: Indexing "{{ bank_name }}/{{ bowtie2_vers }}" for bowtie2
+- name: Indexing "{{ bank_name }}/{{ bowtie_vers }}" for bowtie
   become: yes
   become_user: "{{ bank_user }}"
   shell: >
-     bowtie2-build -q {{ bank_root }}/{{ bank_name }}/fasta/{{ bank_name }}.fa {{ bank_root }}/{{ bank_name }}/bowtie2/{{ bowtie2_vers }}/{{ bank_name }}
+     bowtie-build -q {{ bank_root }}/{{ bank_name }}/fasta/{{ bank_name }}.fa {{ bank_root }}/{{ bank_name }}/bowtie/{{ bowtie_vers }}/{{ bank_name }}
 
-- name: Creating links for "{{ bank_name }}/{{ bowtie2_vers }}" bowtie2 indexes
+- name: Creating links for "{{ bank_name }}/{{ bowtie_vers }}" bowtie indexes
   become: yes
   become_user: "{{ bank_user }}"
   file: >
     src={{ item }}
-    dest={{ bank_root }}/index/bowtie2/{{ bowtie2_vers }}/{{ item | basename }}
+    dest={{ bank_root }}/index/bowtie/{{ bowtie_vers }}/{{ item | basename }}
     state=link
   with_fileglob:
-    - "{{ bank_root }}/{{ bank_name }}/bowtie2/{{ bowtie2_vers }}/*"
+    - "{{ bank_root }}/{{ bank_name }}/bowtie/{{ bowtie_vers }}/*"

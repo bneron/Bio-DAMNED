@@ -3,4 +3,36 @@ bank_user: bank
 bank_group: bank
 bank_root: /data/bank
 module_init: /local/gensoft2/adm/etc/profile.d/modules.sh
-
+indexers:
+  - tool: blast2
+    vers:
+      - 2.2.26
+  - tool: blast+
+    vers:
+      - 2.2.31
+  - tool: golden
+    vers:
+      - 3.0
+  - tool: bwa
+    vers:
+      - 0.5.9
+      - 0.6.2
+      - 0.7.4
+  - tool: soap
+    vers:
+      - 2.21
+  - tool: bowtie
+    vers:
+      - 0.12.7
+  - tool: bowtie2
+    vers:
+      - 2.1.0
+  - tool: picard
+    vers:
+      - 1.94
+  - tool: samtools
+    vers:
+      - 0.1.19
+  - tool: gatk
+    vers:
+      - 2.4-9

@@ -22,7 +22,26 @@
 
 - include: common_tasks/link_fasta.yml
 
-- include: common_tasks/golden_indexing.yml
+- set_fact: golden="{{ indexers | selectattr('tool', 'equalto', 'golden')|list}}"
 
-- include: common_tasks/blast2_indexing.yml
+- name: Start golden indexing
+  include: common_tasks/golden_indexing.yml
+  with_items: "{{ golden[0].vers }}"
+  loop_control:
+    loop_var: golden_vers
 
+- set_fact: blast2="{{ indexers | selectattr('tool', 'equalto', 'blast2')|list}}"
+
+- name: Start blast2 indexing
+  include: common_tasks/blast2_indexing.yml
+  with_items: "{{ blast2[0].vers }}"
+  loop_control:
+    loop_var: blast2_vers
+
+- set_fact: blast+="{{ indexers | selectattr('tool', 'equalto', 'blast+')|list}}"
+
+- name: Start blast+ indexing
+  include: common_tasks/blast+_indexing.yml
+  with_items: "{{ blast+[0].vers }}"
+  loop_control:
+    loop_var: blast+_vers

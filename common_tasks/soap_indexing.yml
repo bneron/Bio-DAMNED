@@ -9,44 +9,53 @@
 # (GPLv3). See the LICENSE file for details.                                   #
 ################################################################################
 
-- name: Creating bowtie2 directory for genome "{{ bank_name }}/{{ bowtie2_vers }}"
+- name: Creating soap directory for "{{ bank_name }}" genome
   become: yes
   become_user: "{{ bank_user }}"
-  file: path={{ bank_root }}/{{ bank_name }}/{{ bowtie2_vers }}/bowtie2
+  file: path={{ bank_root }}/{{ bank_name }}/soap
         state=directory
         owner={{ bank_user }}
         group={{ bank_group }}
         mode=0775
 
-- name: Cleaning "{{ bank_name }}/{{ bowtie2_vers }}" bowtie2 indexes links
+- name: Cleaning "{{ bank_name }}" soap indexes links
   become: yes
   become_user: "{{ bank_user }}"
-  file: path={{bank_root}}/index/bowtie2/{{ bowtie2_vers }}/{{ item | basename }}
+  file: path={{bank_root}}/index/soap/{{ item | basename }}
         state=absent
   with_fileglob:
-    - "{{ bank_root }}/{{ bank_name }}/bowtie2/{{ bowtie2_vers }}/*"
+    - "{{ bank_root }}/{{ bank_name }}/soap/*"
 
-- name: Cleaning "{{ bank_name }}/{{ bowtie2_vers }}" old bowtie2 indexes
+- name: Cleaning "{{ bank_name }}" old soap indexes
   become: yes
   become_user: "{{ bank_user }}"
   file: >
     path={{ item }}
     state=absent
   with_fileglob:
-    - "{{ bank_root }}/{{ bank_name }}/bowtie2/{{ bowtie2_vers }}*"
+    - "{{ bank_root }}/{{ bank_name }}/soap/*"
 
-- name: Indexing "{{ bank_name }}/{{ bowtie2_vers }}" for bowtie2
+- name: Creating link to fasta file in soap directory
   become: yes
   become_user: "{{ bank_user }}"
-  shell: >
-     bowtie2-build -q {{ bank_root }}/{{ bank_name }}/fasta/{{ bank_name }}.fa {{ bank_root }}/{{ bank_name }}/bowtie2/{{ bowtie2_vers }}/{{ bank_name }}
+  file:
+    src={{ bank_root }}/{{ bank_name }}/fasta/{{ bank_name }}.fa
+    dest={{ bank_root }}/index/soap/{{ bank_name }}.fa
+    state=link
 
-- name: Creating links for "{{ bank_name }}/{{ bowtie2_vers }}" bowtie2 indexes
+- name: Indexing "{{ bank_name }}" for soap
+  become: yes
+  become_user: "{{ bank_user }}"
+  shell: 2bwt-builder {{ bank_root }}/{{ bank_name }}/fasta/{{ bank_name }} 1>/dev/null
+  args:
+    chrdir: "{{ bank_root }}/{{ bank_name }}/soap/"
+
+- name: Creating links for "{{ bank_name }}" soap indexes
   become: yes
   become_user: "{{ bank_user }}"
   file: >
     src={{ item }}
-    dest={{ bank_root }}/index/bowtie2/{{ bowtie2_vers }}/{{ item | basename }}
+    dest={{ bank_root }}/index/soap/{{ item | basename }}
     state=link
   with_fileglob:
-    - "{{ bank_root }}/{{ bank_name }}/bowtie2/{{ bowtie2_vers }}/*"
+    - "{{ bank_root }}/{{ bank_name }}/soap/{{ bank_name }}*"

@@ -21,7 +21,8 @@
 - name: Cleaning "{{ bank_name }}" samtools indexes links
   become: yes
   become_user: "{{ bank_user }}"
-  file: path={{bank_root}}/index/samtools/{{ bank_name | basename }} state=absent
+  file: path={{bank_root}}/index/samtools/{{ item | basename }}
+        state=absent
   with_fileglob:
     - "{{ bank_root }}/{{ bank_name }}/samtools/*"
 
@@ -38,7 +39,7 @@
   become: yes
   become_user: "{{ bank_user }}"
   shell: >
-     samtools faidx ref.fasta{{ bank_root }}/{{ bank_name }}/fasta/{{ bank_name }}.fa
+     samtools faidx {{ bank_root }}/{{ bank_name }}/fasta/{{ bank_name }}.fa
 
 - name: Creating links for {{ bank_name }} samtools indexes
   become: yes

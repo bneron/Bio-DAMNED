@@ -9,42 +9,43 @@
 # (GPLv3). See the LICENSE file for details.                                   #
 ################################################################################
 
-- name: Creating bwa directory for "{{ bank_name }}" genome
+- name: Creating bwa directory for "{{ bank_name }} {{bwa_vers}}" genome
   become: yes
   become_user: "{{ bank_user }}"
-  file: path={{ bank_root }}/{{ bank_name }}/bwa
+  file: path={{ bank_root }}/{{ bank_name }}/bwa/{{ bwa_vers }}
         state=directory
         owner={{ bank_user }}
         group={{ bank_group }}
         mode=0775
 
-- name: Cleaning "{{ bank_name }}" bwa indexes links
+- name: Cleaning "{{ bank_name }}/{{ bwa_vers }}" bwa indexes links
   become: yes
   become_user: "{{ bank_user }}"
-  file: path={{bank_root}}/index/bwa/{{ bank_name | basename }} state=absent
+  file: path={{bank_root}}/index/bwa/{{bwa_vers}}/{{ item | basename }}
+        state=absent
   with_fileglob:
-    - "{{ bank_root }}/{{ bank_name }}/bwa/*"
+    - "{{ bank_root }}/{{ bank_name }}/bwa/{{bwa_vers}}/*"
 
-- name: Cleaning "{{ bank_name }}" old bwa indexes
+- name: Cleaning "{{ bank_name }}/{{ bwa_vers }}" old bwa indexes
   become: yes
   become_user: "{{ bank_user }}"
   file: >
     path={{ item }}
     state=absent
   with_fileglob:
-    - "{{ bank_root }}/{{ bank_name }}/bwa/*"
+    - "{{ bank_root }}/{{ bank_name }}/bwa/{{ bwa_vers }}/*"
 
-- name: Indexing "{{ bank_name }}" for bwa
+- name: Indexing "{{ bank_name }}/{{ bwa_vers }}" for bwa
   become: yes
   become_user: "{{ bank_user }}"
-  shell: bwa index -a bwtsw -p {{ bank_root }}/{{ bank_name }}/bwa/{{ bank_name }} {{ bank_root }}/{{ bank_name }}/fasta/{{ bank_name }}.fa
+  shell: bwa index -a bwtsw -p {{ bank_root }}/{{ bank_name }}/bwa/{{ bwa_vers }}/{{ bank_name }} {{ bank_root }}/{{ bank_name }}/fasta/{{ bank_name }}.fa
 
-- name: Creating links for "{{ bank_name }}" bwa indexes
+- name: Creating links for "{{ bank_name }}/{{ bwa_vers }}" bwa indexes
   become: yes
   become_user: "{{ bank_user }}"
   file: >
     src={{ item }}
-    dest={{ bank_root }}/index/bwa/{{ item | basename }}
+    dest={{ bank_root }}/index/bwa/{{ bwa_vers }}/{{ item | basename }}
     state=link
   with_fileglob:
-    - "{{ bank_root }}/{{ bank_name }}/bwa/*"
+    - "{{ bank_root }}/{{ bank_name }}/bwa/{{ bwa_vers }}/*"

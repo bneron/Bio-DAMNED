@@ -45,24 +45,14 @@
   become_user: yes
   become: "{{ bank_user }}"
   file:
-    path={{ bank_root}}/index/{{ item }}
+    path={{ bank_root}}/index/{{ item.0.tool }}/{{item.1}}
     state=directory
     owner={{ bank_user }}
     group={{ bank_group }}
     mode=775
-  with_items:
-    - blast2
-    - blast+
-    - bowtie
-    - bowtie2
-    - bwa
-    - fusioncatcher
-    - gatk
-    - golden
-    - hmmer
-    - picard
-    - samtools
-    - soap
+  with_subelements:
+    - "{{ indexers }}"
+    - vers
 
 - name: create directory for fasta files
   become_user: yes
