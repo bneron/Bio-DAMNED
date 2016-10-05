@@ -44,8 +44,8 @@ The general configuration is done in Invetory/group_vars/all file
 * module_init: \<path to module initialization\>
 * indexers: \<list of tools used for indexing with their respective versions see doc\>
 * indexers is a list of tool each tool is a hash containing 2 keys
-** tool: the name of the tool
-** vers: the list of vers supported
+    * tool: the name of the tool
+    * vers: the list of vers supported
 
 for instance
 <pre>
