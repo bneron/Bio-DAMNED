@@ -38,14 +38,14 @@ in the workflows (AKA roles).
 
 The general configuration is done in Invetory/group_vars/all file
 
-bank_user: <user who managed banks>
-bank_group: <group who managed banks>
-bank_root: <the absolute path where to store all banks>
-module_init: <path to module initialization>
-indexers: <list of tools used for indexing with their respective versions see doc>
-indexers is a list of tool each tool is a hash containing 2 keys
-* tool: the name of the tool
-* vers: thelist of vers supported
+* bank_user: \<user who managed banks\>
+* bank_group: \<group who managed banks\>
+* bank_root: \<the absolute path where to store all banks>
+* module_init: \<path to module initialization\>
+* indexers: \<list of tools used for indexing with their respective versions see doc\>
+* indexers is a list of tool each tool is a hash containing 2 keys
+** tool: the name of the tool
+** vers: the list of vers supported
 
 for instance
 <pre>
@@ -70,17 +70,17 @@ indexers:
     
 All bank are located in and have the following structure 
 <pre>
-<bank_root>
+&lt;bank_root&gt;
    |------>distbanks
    |------>fasta
    |------>index
-   |        |-> <tool>
-   :        :    |-> <version>
+   |        |-> &lt;tool&gt;
+   :        :    |-> &lt;version&gt;
    :        :    :
    :     
-   |------><bank or genome>
+   |------><bank or genome&gt;
    :             |-> uncompressed   
-   :             |-> <tool>  
+   :             |-> &lt;tool&gt;  
    :             :
 </pre>
    
@@ -99,16 +99,16 @@ for this bank for each tools and version.
 
 
 <pre>
-<bank_root>
+&lt;bank_root>
    |------>distbanks
-   |------>fasta
+   |------&lt;fasta
    |------>index
    |        |-> blast+
    |             |-> 2.2.31
    |
    |        |-> golden
    |             |-> 3.0
-   |                  |-> m_tuberculosis -> <bank_root>/m_tuberculosis/golden/3.0/tuberculosis_CDC1551.acx
+   |                  |-> m_tuberculosis -> &lt;bank_root&gt;/m_tuberculosis/golden/3.0/tuberculosis_CDC1551.acx
    |                  :
    |
    |        |-> bowtie
@@ -205,7 +205,7 @@ The diagrams of the workflows used to prepare the bank/genome are below.
   get_data -> specific_fasta_stuff;
   specific_fasta_stuff -> link_fasta;
   link_fasta -> blast2_indexing;
-  blast2_indexing -> blast+_indexing;
+  blast2_indexing -> blast_plus_indexing;
   }
 )
 
@@ -234,7 +234,7 @@ The diagrams of the workflows used to prepare the bank/genome are below.
   reformatting_in_fasta -> link_fasta;
   link_fasta -> golden_indexing;
   golden_indexing -> blast2_indexing;
-  blast2_indexing -> blast+_indexing;
+  blast2_indexing -> blast_plus_indexing;
   }
 )
 
