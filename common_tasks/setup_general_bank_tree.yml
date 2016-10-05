@@ -56,7 +56,6 @@
     - bowtie
     - bowtie2
     - bwa
-    - fusioncatcher
     - gatk
     - golden
     - hmmer
