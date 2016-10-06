@@ -18,7 +18,10 @@
 - name: reformating "{{ bank_name }}" in fasta format
   become: yes
   become_user: "{{ bank_user }}"
-  shell: squizz -c FASTA -f GENBANK {{ bank_root }}/{{ bank_name }}/uncompressed/{{ bank_name }}.gbk >> {{ bank_root }}/{{ bank_name }}/fasta/{{ bank_name }}.fa
+  shell:
+    "source {{ module_init }} && \
+     module load dbtools/0.99b && \
+     flatfasta -d {{ bank_name }} {{ bank_root }}/{{ bank_name }}/uncompressed/{{ bank_name }}.gbk > {{ bank_root }}/{{ bank_name }}/fasta/{{ bank_name }}.fa"
 
 - include: common_tasks/link_fasta.yml
 
