@@ -35,13 +35,24 @@
   with_fileglob:
     - "{{ bank_root }}/{{ bank_name }}/bwa/{{ bwa_vers }}/*"
 
-- name: Indexing "{{ bank_name }}/{{ bwa_vers }}" for bwa
+
+- name: Indexing "{{ bank_name }}/{{ bwa_vers }}" for bwa for large genome.
   become: yes
   become_user: "{{ bank_user }}"
   shell: >
     source "{{ module_init }}" && \
     module load bwa/{{ bwa_vers }} && \
     bwa index -a bwtsw -p {{ bank_root }}/{{ bank_name }}/bwa/{{ bwa_vers }}/{{ bank_name }} {{ bank_root }}/{{ bank_name }}/fasta/{{ bank_name }}.fa
+  when: "{{ large | default(false) }}"
+
+- name: Indexing "{{ bank_name }}/{{ bwa_vers }}" for bwa
+  become: yes
+  become_user: "{{ bank_user }}"
+  shell: >
+    source "{{ module_init }}" && \
+    module load bwa/{{ bwa_vers }} && \
+    bwa index -p {{ bank_root }}/{{ bank_name }}/bwa/{{ bwa_vers }}/{{ bank_name }} {{ bank_root }}/{{ bank_name }}/fasta/{{ bank_name }}.fa
+  when: not "{{ large | default(false) }}"
 
 - name: Creating links for "{{ bank_name }}/{{ bwa_vers }}" bwa indexes
   become: yes
