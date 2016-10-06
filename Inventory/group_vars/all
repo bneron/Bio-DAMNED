@@ -13,7 +13,7 @@ indexers:
       - 2.2.31
   - tool: golden
     vers:
-      - 3.0
+      - 1.1a
   - tool: bwa
     vers:
       - 0.5.9
