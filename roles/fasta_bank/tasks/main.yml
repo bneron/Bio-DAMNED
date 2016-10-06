@@ -15,38 +15,15 @@
 
 - include: common_tasks/get_data.yml ext=fa
 
-- name: Running squizz on "{{ bank_name }}"  to check format
-  become: yes
-  become_user: "{{ bank_user }}"
-  shell:
-    "source {{ module_init }} && \
-     module load squizz/0.99c && \
-     squizz {{ bank_root }}/{{ bank_name }}/uncompressed/{{ bank_name }}.fa"
-  register: format
-
 - name: Reformating "{{ bank_name }}" in fasta format
   become: yes
   become_user: "{{ bank_user }}"
-  when: "'FASTA' in format.stderr"
   shell:
     "source {{ module_init }} && \
-     module load squizz/0.99c && \
-     squizz -c FASTA -f FASTA {{ bank_root }}/{{ bank_name }}/uncompressed/{{ bank_name }}.fa > {{ bank_root }}/{{ bank_name }}/fasta/{{ bank_name }}.fa"
-
-- name: Copying {{ bank_name }} in fasta subdirectory without reformating
-  become: yes
-  become_user: "{{ bank_user }}"
-  when: "not 'FASTA' in format.stderr"
-  copy:
-    src={{ bank_root }}/{{ bank_name }}/uncompressed/{{ bank_name }}.fa
-    dest={{ bank_root }}/{{ bank_name }}/fasta/{{ bank_name }}.fa
-    remote_src=True
-    owner={{ bank_user }}
-    group={{ bank_group }}
-    mode=0644
+     module load dbtools/0.99b && \
+     fasta2fasta -d {{ bank_name }} {{ bank_root }}/{{ bank_name }}/uncompressed/{{ bank_name }}.fa > {{ bank_root }}/{{ bank_name }}/fasta/{{ bank_name }}.fa"
 
 - include: common_tasks/link_fasta.yml
-
 
 - set_fact: blast2="{{ indexers | selectattr('tool', 'equalto', 'blast2')|list}}"
 - name: Start blast2 indexing
