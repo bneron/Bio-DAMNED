@@ -38,7 +38,10 @@
 - name: Indexing "{{ bank_name }}" for picard
   become: yes
   become_user: "{{ bank_user }}"
-  shell: CreateSequenceDictionary REFERENCE={{ bank_root }}/{{ bank_name }}/fasta/{{ bank_name }}.fa  OUTPUT={{ bank_root }}/{{ bank_name }}/picard/{{ bank_name }}.dict CREATE_INDEX=true
+  shell: >
+    source "{{ module_init }}" && \
+    module load picard-tools/{{ picard_vers }} && \
+    CreateSequenceDictionary REFERENCE={{ bank_root }}/{{ bank_name }}/fasta/{{ bank_name }}.fa  OUTPUT={{ bank_root }}/{{ bank_name }}/picard/{{ bank_name }}.dict CREATE_INDEX=true
 
 - name: Creating links for "{{ bank_name }}" picard indexes
   become: yes

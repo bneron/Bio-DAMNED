@@ -33,11 +33,18 @@
   with_fileglob:
     - "{{ bank_root }}/{{ bank_name }}/blast+/{{ blast+_vers }}/*"
 
+- fail: msg="Invalid value for dbtype: must be 'nucl' or 'pro'"
+  when:
+    - dbtype is defined
+    - dbtype not in ['nucl', 'prot']
+
 - name: Creating blast+ indexes for  "{{ bank_name }}/{{ blast+_vers }}"
   become: yes
   become_user: "{{ bank_user }}"
   shell: >
-    makeblastdb -title {{ bank_name }} -in {{ bank_root }}/{{ bank_name }}/fasta/{{ bank_name }}.fa -dbtype nucl -logfile /dev/null
+    source "{{ module_init }}" && \
+    module load blast+/{{ blast+_vers }} && \
+    makeblastdb -title {{ bank_name }} -in {{ bank_root }}/{{ bank_name }}/fasta/{{ bank_name }}.fa -dbtype {{ dbtype | default('nucl') }} -logfile /dev/null
     chdir={{ bank_root }}/{{ bank_name }}/blast+
 
 - name: Moving and renaming "{{ bank_name }}/{{ blast+_vers }}" blast indexes in right directory

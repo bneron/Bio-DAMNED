@@ -14,8 +14,12 @@ The system can be easily extended to new kind of indexes or sources of data.
     * bowtie2
     * bwa
     * ...
+ 3. [module](http://modules.sourceforge.net/)
 
-# Architecture
+The automaton support the indexation with several concurrent version of each tools.
+Todo that the automaton rely on the [Environment Modules Project](http://modules.sourceforge.net/).
+
+# Bio-Damned Architecture
 
 The playbook give you an overview of all banks you have configured.
 Each role is matched to a bank. In a role we assign a predefined workflow
@@ -32,6 +36,100 @@ The workflows are designed with roles but lot of steps are common between workfl
 These common steps are found in the common_tasks directory and are included
 in the workflows (AKA roles).
 
+The general configuration is done in Invetory/group_vars/all file
+
+* bank_user: \<user who managed banks\>
+* bank_group: \<group who managed banks\>
+* bank_root: \<the absolute path where to store all banks>
+* module_init: \<path to module initialization\>
+* indexers: \<list of tools used for indexing with their respective versions see doc\>
+* indexers is a list of tool each tool is a hash containing 2 keys
+    * tool: the name of the tool
+    * vers: the list of versions supported
+
+for instance
+<pre>
+indexers:
+  - tool: blast2
+    vers:
+      - 2.2.26
+  - tool: blast+
+    vers:
+      - 2.2.31
+  - tool: golden
+    vers:
+      - 3.0
+  - tool: bwa
+    vers:
+      - 0.5.9
+      - 0.6.2
+      - 0.7.4
+</pre>
+
+# Banks architecture
+    
+All bank are located in \<bank_root\> and have the following structure 
+<pre>
+&lt;bank_root&gt;
+   |------>distbanks
+   |------>fasta
+   |------>index
+   |        |-> &lt;tool&gt;
+   :        :    |-> &lt;version&gt;
+   :        :    :
+   :     
+   |------><bank or genome&gt;
+   :             |-> uncompressed   
+   :             |-> &lt;tool&gt;  
+   :             :
+</pre>
+   
+In `distbanks` are stored the results of downloading, if an upgrade of a bank is needed
+**do not forget** to remove the old file from `distbanks`. If this step is skipped
+   the bank will **not** be download and the file in `distbanks` will be used.
+    
+In Fasta there are symbolic links to all specific banks formatted in fasta.
+
+In Index each indexer have a subdirectory in each tool subdirectory there are 
+one directory per tool version. And at least in each version directory there are all symbolic link towards all
+databanks or genome indexed with this <tool>/<version>.
+
+and for each bank or genome there is a directory containing the indexes 
+for this bank for each tools and version.
+
+
+<pre>
+&lt;bank_root>
+   |------>distbanks
+   |------&lt;fasta
+   |------>index
+   |        |-> blast+
+   |             |-> 2.2.31
+   |
+   |        |-> golden
+   |             |-> 3.0
+   |                  |-> m_tuberculosis -> &lt;bank_root&gt;/m_tuberculosis/golden/3.0/tuberculosis_CDC1551.acx
+   |                  :
+   |
+   |        |-> bowtie
+   |             |-> 0.12.7
+   |        |-> bwa
+   :        :    |-> 0.5.9
+   :        :    |-> 0.6.2
+   :        :    :
+   :     
+   |------>m_tuberculosis
+                |-> uncompressed 
+                |       |-> m_tuberculosi.gbk
+                |   
+                |-> golden
+                     |-> 3.0
+                          |-> tuberculosis_CDC1551.acx
+                          :
+                
+</pre>
+
+   
 ## Provided tasks
 
 ### setup_general_bank_tree
@@ -69,6 +167,26 @@ Create link in the general fasta directory to the fasta file in the fasta direct
 3. then compute new indexes
 4. and creates new links
 
+### blast+ indexing
+
+do the same thing as blast2 but use `makeblastdb` instead of `formatdb` to index
+
+### bowtie
+
+### bowtie2
+
+### bwa
+
+### gatk
+
+### golden
+
+### picard-tools
+
+### samtools
+
+### soap
+
 # Provided Workflows
 
 The diagrams of the workflows used to prepare the bank/genome are below.
@@ -87,6 +205,7 @@ The diagrams of the workflows used to prepare the bank/genome are below.
   get_data -> specific_fasta_stuff;
   specific_fasta_stuff -> link_fasta;
   link_fasta -> blast2_indexing;
+  blast2_indexing -> blast_plus_indexing;
   }
 )
 
@@ -115,6 +234,7 @@ The diagrams of the workflows used to prepare the bank/genome are below.
   reformatting_in_fasta -> link_fasta;
   link_fasta -> golden_indexing;
   golden_indexing -> blast2_indexing;
+  blast2_indexing -> blast_plus_indexing;
   }
 )
 

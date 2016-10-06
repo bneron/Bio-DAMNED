@@ -39,7 +39,9 @@
   become: yes
   become_user: "{{ bank_user }}"
   shell: >
-     bowtie-build -q {{ bank_root }}/{{ bank_name }}/fasta/{{ bank_name }}.fa {{ bank_root }}/{{ bank_name }}/bowtie/{{ bowtie_vers }}/{{ bank_name }}
+    source "{{ module_init }}" && \
+    module load bowtie/{{ bowtie_vers }} && \
+    bowtie-build -q {{ bank_root }}/{{ bank_name }}/fasta/{{ bank_name }}.fa {{ bank_root }}/{{ bank_name }}/bowtie/{{ bowtie_vers }}/{{ bank_name }}
 
 - name: Creating links for "{{ bank_name }}/{{ bowtie_vers }}" bowtie indexes
   become: yes

@@ -46,7 +46,10 @@
 - name: Indexing "{{ bank_name }}" for soap
   become: yes
   become_user: "{{ bank_user }}"
-  shell: 2bwt-builder {{ bank_root }}/{{ bank_name }}/fasta/{{ bank_name }} 1>/dev/null
+  shell: >
+    source "{{ module_init }}" && \
+    module load soap/{{ soap_vers }} && \
+    2bwt-builder {{ bank_root }}/{{ bank_name }}/fasta/{{ bank_name }} 1>/dev/null
   args:
     chrdir: "{{ bank_root }}/{{ bank_name }}/soap/"
 

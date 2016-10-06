@@ -33,12 +33,33 @@
   with_fileglob:
     - "{{ bank_root }}/{{ bank_name }}/blast2/{{ blast2_vers }}/*"
 
+- fail: msg="Invalid value for dbtype: must be 'nucl' or 'pro'"
+  when:
+    - {{ dbtype }} is defined
+    - {{ dbtype }} not in ['nucl', 'prot']
+
 - name: Creating blast2 indexes for  "{{ bank_name }}/{{ blast2_vers }}"
   become: yes
   become_user: "{{ bank_user }}"
   shell: >
-    formatdb  -t "{{ bank_name }}" -n "{{ bank_name }}" -i {{ bank_root }}/{{ bank_name }}/fasta/{{ bank_name }}.fa  -p F -l /dev/null
+    source "{{ module_init }}" && \
+    module load blast2/{{ blast2_vers }} && \
+    formatdb  -t "{{ bank_name }}" -n "{{ bank_name }}" -i {{ bank_root }}/{{ bank_name }}/fasta/{{ bank_name }}.fa  -p T -l /dev/null
     chdir={{ bank_root }}/{{ bank_name }}/blast2
+  when:
+    - dbtype is defined
+    - dbtype == "prot"
+
+- name: Creating blast2 indexes for  "{{ bank_name }}/{{ blast2_vers }}"
+  become: yes
+  become_user: "{{ bank_user }}"
+  shell: >
+    source "{{ module_init }}" && \
+    module load blast2/{{ blast2_vers }} && \
+    formatdb  -t "{{ bank_name }}" -n "{{ bank_name }}" -i {{ bank_root }}/{{ bank_name }}/fasta/{{ bank_name }}.fa  -p T -l /dev/null
+    chdir={{ bank_root }}/{{ bank_name }}/blast2
+  when: (dbtype is undefined) or (dbtype == "prot")
+
 
 - name: Moving and renaming "{{ bank_name }}/{{ blast2_vers }}" blast indexes in right directory
   become: yes
