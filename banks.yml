@@ -20,18 +20,22 @@
     - {role: fasta_genome, tags: ['yersinia_nuc'],
        bank_name: yersinia_pestis_nuc,
        bank_src: "ftp://ftp.ncbi.nih.gov/genomes/refseq/bacteria/Yersinia_pestis/reference/GCF_000009065.1_ASM906v1/GCF_000009065.1_ASM906v1_genomic.fna.gz"}
-    - {role: fasta_bank, tags: ['silva_SSU_Nr99'],
+    - {role: fasta_bank, tags: ['silva_SSU', 'silva'],
        bank_name: silva_SSU,
-       bank_src: "https://www.arb-silva.de/fileadmin/silva_databases/release_123_1/Exports/SILVA_123.1_SSURef_Nr99_tax_silva.fasta.gz"}
-    - {role: fasta_bank, tags: ['silva_LSU_tax_full_align'],
-       bank_name: silva_SSU_Nr99_tax_full_align,
-       bank_src: "https://www.arb-silva.de/fileadmin/silva_databases/release_123_1/Exports/SILVA_123.1_SSURef_Nr99_tax_silva_full_align_trunc.fasta.gz"}
-    - {role: fasta_bank, tags: ['silva_LSU_tax'],
+       bank_src: "ftp://ftp.arb-silva.de/current/Exports/SILVA_128_SSURef_Nr99_tax_silva.fasta.gz"}
+    - {role: fasta_bank, tags: ['silva_LSU', 'silva'],
        bank_name: silva_LSU,
-       bank_src: "https://www.arb-silva.de/fileadmin/silva_databases/release_123_1/Exports/SILVA_123.1_LSURef_tax_silva.fasta.gz"}
+       bank_src: "ftp://ftp.arb-silva.de/current/Exports/SILVA_128_LSURef_tax_silva.fasta.gz"}
+    - {role: fasta_bank, tags: ['greengenes'],
+       bank_name: greengenes,
+       bank_src: "ftp://greengenes.microbio.me/greengenes_release/current/gg_13_5_with_header.fasta.gz"}
     - {role: blast_bank, tags: ['ncbi_16s'],
        bank_name: ncbi_16s,
        bank_src: "ftp://ftp.ncbi.nih.gov/blast/db/16SMicrobial.tar.gz"}
-    - {role: fasta_bank, tags: ['gg13_5'],
-       bank_name: greengenes,
-       bank_src: "ftp://greengenes.microbio.me/greengenes_release/gg_13_5/gg_13_5.fasta.gz"}
+    - {role: fasta_bank, tags: ['nt'],
+       bank_name: nt,
+       bank_src: "ftp://ftp.ncbi.nih.gov/blast/db/FASTA/nt.gz"}
+    - {role: genbank_bank, tags: ['swissprot'],
+       bank_name: swissprot,
+       bank_src: "ftp://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/complete/uniprot_sprot.dat.gz"}
+
