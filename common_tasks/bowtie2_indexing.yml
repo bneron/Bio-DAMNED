@@ -9,16 +9,16 @@
 # (GPLv3). See the LICENSE file for details.                                   #
 ################################################################################
 
-- name: Creating bowtie2 directory for genome "{{ bank_name }}/{{ bowtie2_vers }}"
+- name: Creating "bowtie2/{{ bowtie2_vers }}"  directory for genome "{{ bank_name }}"
   become: yes
   become_user: "{{ bank_user }}"
-  file: path={{ bank_root }}/{{ bank_name }}/{{ bowtie2_vers }}/bowtie2
+  file: path={{ bank_root }}/{{ bank_name }}/bowtie2/{{ bowtie2_vers }}
         state=directory
         owner={{ bank_user }}
         group={{ bank_group }}
         mode=0775
 
-- name: Cleaning "{{ bank_name }}/{{ bowtie2_vers }}" bowtie2 indexes links
+- name: Cleaning "{{ bank_name }}/bowtie2/{{ bowtie2_vers }}"  indexes links
   become: yes
   become_user: "{{ bank_user }}"
   file: path={{bank_root}}/index/bowtie2/{{ bowtie2_vers }}/{{ item | basename }}
