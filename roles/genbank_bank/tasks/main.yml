@@ -33,7 +33,7 @@
   loop_control:
     loop_var: golden_vers
 
-- set_fact: blast2="{{ indexers | selectattr('tool', 'equalto', 'blast2')|list}}"
+- set_fact: blast="{{ indexers | selectattr('tool', 'equalto', 'blast')|list}}"
 
 - name: Start blast2 indexing
   include: common_tasks/blast2_indexing.yml
