@@ -33,10 +33,11 @@
   with_fileglob:
     - "{{ bank_root }}/{{ bank_name }}/blast2/{{ blast2_vers }}/*"
 
-- fail: msg="Invalid value for dbtype: must be 'nucl' or 'pro'"
+- fail: msg="Invalid value for dbtype must be nucl or pro"
   when:
-    - {{ dbtype }} is defined
-    - {{ dbtype }} not in ['nucl', 'prot']
+    - dbtype is defined
+    - dbtype  != 'nucl' or dbtype != 'prot'
+
 
 - name: Creating blast2 indexes for  "{{ bank_name }}/{{ blast2_vers }}"
   become: yes
