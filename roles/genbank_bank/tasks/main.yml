@@ -41,10 +41,10 @@
   loop_control:
     loop_var: blast2_vers
 
-- set_fact: blast+="{{ indexers | selectattr('tool', 'equalto', 'blast+')|list}}"
+- set_fact: blast_plus="{{ indexers | selectattr('tool', 'equalto', 'blast+')|list}}"
 
 - name: Start blast+ indexing
   include: common_tasks/blast+_indexing.yml
   with_items: "{{ blast+[0].vers }}"
   loop_control:
-    loop_var: blast+_vers
+    loop_var: blast_plus_vers
